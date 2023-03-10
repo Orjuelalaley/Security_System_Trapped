@@ -66,19 +66,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new DevicesFragment()).commit();
                            break;
                        case R.id.about:
-                           //Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                          // startActivity(intent);
                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
-
                            break;
                    }
                    return true;
                }
-
         }
-
         );
-        //binding.fab.setOnClickListener(view -> showBottomDialog());
     }
 
     //SIN USO
@@ -101,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_logout:
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
                 break;
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START);
