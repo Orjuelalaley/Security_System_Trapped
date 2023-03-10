@@ -23,12 +23,14 @@ import android.widget.Toast;
 
 import com.example.proyectomovil.databinding.ActivityMainBinding;
 import com.example.proyectomovil.utils.AlertUtils;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     ActivityMainBinding binding;
+    HomeFragment homeFragment=new HomeFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(binding.getRoot());
         Toolbar toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
-        DrawerLayout drawerLayout = binding.getRoot();
+        DrawerLayout drawerLayout = binding.drawerLayout;
         binding.navView.setNavigationItemSelectedListener(this);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav);
         drawerLayout.addDrawerListener(toggle);
@@ -47,8 +49,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
             binding.navView.setCheckedItem(R.id.nav_home);
         }
+        binding.bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+               @Override
+               public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                   switch (item.getItemId()) {
+                       case R.id.home:
+                           getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
+                           break;
+                       case R.id.Configuración:
+                           getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
+                           break;
+                       case R.id.homeButton:
+                           showBottomDialog();
+                           break;
+                       case R.id.dispositivos:
+                           getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new DevicesFragment()).commit();
+                           break;
+                       case R.id.about:
+                           //Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                          // startActivity(intent);
+                           getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
+
+                           break;
+                   }
+                   return true;
+               }
+
+        }
+
+        );
         //binding.fab.setOnClickListener(view -> showBottomDialog());
     }
+
+    //SIN USO
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
