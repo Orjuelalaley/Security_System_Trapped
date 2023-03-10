@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 
 import com.example.proyectomovil.databinding.ActivityMainBinding;
-import com.example.proyectomovil.utils.AlertUtils;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -49,28 +48,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
             binding.navView.setCheckedItem(R.id.nav_home);
         }
-        binding.bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-               @Override
-               public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                   switch (item.getItemId()) {
-                       case R.id.home:
-                           getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
-                           break;
-                       case R.id.Configuración:
-                           getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
-                           break;
-                       case R.id.homeButton:
-                           showBottomDialog();
-                           break;
-                       case R.id.dispositivos:
-                           getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new DevicesFragment()).commit();
-                           break;
-                       case R.id.about:
-                           getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
-                           break;
-                   }
-                   return true;
-               }
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.home:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
+                    break;
+                case R.id.Configuración:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
+                    break;
+                case R.id.homeButton:
+                    showBottomDialog();
+                    break;
+                case R.id.dispositivos:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new DevicesFragment()).commit();
+                    break;
+                case R.id.about:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
+                    break;
+            }
+            return true;
         }
         );
     }
@@ -114,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         addDevice.setOnClickListener(v -> {
             dialog.dismiss();
-            Intent intent = new Intent(MainActivity.this, AddDevice.class);
+            Intent intent = new Intent(this, AddDeviceActivity.class);
             startActivity(intent);
         });
 
