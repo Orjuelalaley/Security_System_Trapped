@@ -1,15 +1,14 @@
 package com.example.proyectomovil;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.proyectomovil.databinding.ActivityLogInBinding;
-import com.example.proyectomovil.utils.AlertUtils;
+import com.example.proyectomovil.utils.*;
 
 
 public class LoginActivity extends AppCompatActivity {
