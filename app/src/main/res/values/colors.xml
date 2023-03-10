@@ -10,5 +10,7 @@
     <color name="green">#FF00FF00</color>
     <color name="green_dark">#009000</color>
     <color name="grey">#5C6D5C</color>
+    <color name="verdeTrappedClaro">#64DA7B</color>
+    <color name="verdeTrappedOscuro">#237506</color>
 
 </resources>
