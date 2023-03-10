@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Toast;
 
 import com.example.proyectomovil.databinding.ActivityLogInBinding;
 import com.example.proyectomovil.utils.AlertUtils;
@@ -14,6 +15,8 @@ import com.example.proyectomovil.utils.AlertUtils;
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLogInBinding binding;
+    private static final int TIME_INTERVAL = 2000; // Intervalo de tiempo entre pulsaciones en milisegundos
+    private long mBackPressed;
 
 
     @Override
@@ -22,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_log_in);
         binding = ActivityLogInBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
 
         binding.loginBtn.setOnClickListener(view -> {
             String username = binding.username.getText().toString().trim();
@@ -48,8 +52,18 @@ public class LoginActivity extends AppCompatActivity {
         binding.registratonBtn.setOnClickListener(view -> {
             Intent intent = new Intent(this, RegisterActivity.class);
             startActivity(intent);
-            finish();
         });
 
+    }
+    @Override
+    public void onBackPressed() {
+        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis()) {
+            super.onBackPressed();
+            return;
+        } else {
+            Toast.makeText(getBaseContext(), "Presiona de nuevo para salir", Toast.LENGTH_SHORT).show();
+        }
+
+        mBackPressed = System.currentTimeMillis();
     }
 }
