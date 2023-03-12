@@ -51,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
         binding.registratonBtn.setOnClickListener(view -> {
             Intent intent = new Intent(this, RegisterActivity.class);
             startActivity(intent);
+            finish();
+
         });
 
     }

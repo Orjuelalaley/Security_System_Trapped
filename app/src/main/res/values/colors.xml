@@ -12,5 +12,7 @@
     <color name="grey">#5C6D5C</color>
     <color name="verdeTrappedClaro">#64DA7B</color>
     <color name="verdeTrappedOscuro">#237506</color>
+    <color name="red">#FF0000</color>
+
 
 </resources>
