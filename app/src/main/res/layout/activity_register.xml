@@ -30,7 +30,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="20dp"
-                android:text="@string/login"
+                android:text="@string/registro"
                 android:textAlignment="center"
                 android:textSize="36sp"
                 android:textStyle="bold" />
@@ -68,13 +68,13 @@
             </EditText>
 
             <Button
-                android:id="@+id/loginBtn"
+                android:id="@+id/RegBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
                 android:backgroundTint="@color/grey"
-                android:text="@string/login"
+                android:text="@string/registrarse"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -82,20 +82,4 @@
             </Button>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
-    <Button
-        android:id="@+id/registratonBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/grey"
-        android:fontFamily="sans-serif-medium"
-        android:padding="6dp"
-        android:text="@string/signup"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:cornerRadius="30dp"
-        android:imeOptions="actionDone"
-        tools:ignore="TextViewEdits">
-    </Button>
 </LinearLayout>

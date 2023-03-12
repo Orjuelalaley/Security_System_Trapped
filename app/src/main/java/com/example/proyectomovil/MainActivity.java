@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 
 import com.example.proyectomovil.databinding.ActivityMainBinding;
-import com.example.proyectomovil.utils.AlertUtils;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -30,7 +29,8 @@ import com.google.android.material.navigation.NavigationView;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     ActivityMainBinding binding;
-    HomeFragment homeFragment=new HomeFragment();
+    private static final int TIME_INTERVAL = 2000; // Intervalo de tiempo entre pulsaciones en milisegundos
+    private long mBackPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,39 +49,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
             binding.navView.setCheckedItem(R.id.nav_home);
         }
-        binding.bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-               @Override
-               public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                   switch (item.getItemId()) {
-                       case R.id.home:
-                           getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
-                           break;
-                       case R.id.Configuración:
-                           getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
-                           break;
-                       case R.id.homeButton:
-                           showBottomDialog();
-                           break;
-                       case R.id.dispositivos:
-                           getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new DevicesFragment()).commit();
-                           break;
-                       case R.id.about:
-                           //Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                          // startActivity(intent);
-                           getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
-
-                           break;
-                   }
-                   return true;
-               }
-
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.home:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
+                    break;
+                case R.id.Configuración:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
+                    break;
+                case R.id.homeButton:
+                    showBottomDialog();
+                    break;
+                case R.id.dispositivos:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new DevicesFragment()).commit();
+                    break;
+                case R.id.about:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
+                    break;
+            }
+            return true;
+        }
+        );
+    }
+    @Override
+    public void onBackPressed() {
+        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis()) {
+            super.onBackPressed();
+            return;
+        } else {
+            Toast.makeText(getBaseContext(), "Presiona de nuevo para salir", Toast.LENGTH_SHORT).show();
         }
 
-        );
-        //binding.fab.setOnClickListener(view -> showBottomDialog());
+        mBackPressed = System.currentTimeMillis();
     }
 
-    //SIN USO
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_logout:
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
                 break;
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START);
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         addDevice.setOnClickListener(v -> {
             dialog.dismiss();
-            Intent intent = new Intent(MainActivity.this, AddDevice.class);
+            Intent intent = new Intent(this, AddDeviceActivity.class);
             startActivity(intent);
         });
 
