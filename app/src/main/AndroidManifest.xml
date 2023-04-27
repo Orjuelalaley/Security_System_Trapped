@@ -12,13 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoMovil">
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activities.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".AddDeviceActivity"
+            android:name=".activities.AddDeviceActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Starting">
             <intent-filter>
@@ -37,7 +37,7 @@
             android:value="" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

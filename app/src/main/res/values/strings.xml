@@ -22,5 +22,22 @@
     <string name="devices">Dispositivos</string>
     <string name="registrarse">Registrarse</string>
     <string name="registro">Registro</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Contraseña</string>
+    <string name="phone">Teléfono</string>
+    <string name="Name">Nombre</string>
+    <string name="snackBar_dismiss_label">Cerrar</string>
+    <string name="Login">Iniciar Sesión</string>
+    <string name="Register">Registrarse</string>
+    <string name="login_link">Iniciar Sesión</string>
+    <string name="mail_error_label">El email no puede estar vacio.</string>
+    <string name="error_email_label">El email no es valido.</string>
+    <string name="error_pass_label">El password no puede estar vacio.</string>
+    <string name="error_name_label">El nombre no puede estar vacio.</string>
+    <string name="error_phone_label">El teléfono no puede estar vacio.</string>
+    <string name="ResetPassword">Olvido su contraseña</string>
+    <string name="Registrarse">Registrarse</string>
+    <string name="menu_profile">Perfil</string>
+    <string name="manu_logout">Cerrar Sesión</string>
 
 </resources>

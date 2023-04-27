@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/loginbkg2"
@@ -47,8 +46,8 @@
                 android:hint="@string/username"
                 android:inputType="text"
                 android:padding="10dp"
-                android:textColor="@color/black"
-                android:textColorHighlight="@color/white">
+                android:textColor="@color/black_1000"
+                android:textColorHighlight="@color/white_1000">
             </EditText>
 
             <EditText
@@ -63,8 +62,8 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:padding="10dp"
-                android:textColor="@color/black"
-                android:textColorHighlight="@color/white">
+                android:textColor="@color/black_1000"
+                android:textColorHighlight="@color/white_1000">
             </EditText>
 
             <Button
@@ -73,9 +72,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:backgroundTint="@color/grey"
+                android:backgroundTint="@color/grey_500"
                 android:text="@string/registrarse"
-                android:textColor="@color/white"
+                android:textColor="@color/white_1000"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:cornerRadius="20dp">

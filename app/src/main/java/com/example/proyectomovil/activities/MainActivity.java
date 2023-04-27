@@ -1,4 +1,4 @@
-package com.example.proyectomovil;
+package com.example.proyectomovil.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -21,14 +21,14 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
+import com.example.proyectomovil.R;
 import com.example.proyectomovil.databinding.ActivityMainBinding;
-import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    ActivityMainBinding binding;
+    private ActivityMainBinding binding;
     private static final int TIME_INTERVAL = 2000; // Intervalo de tiempo entre pulsaciones en milisegundos
     private long mBackPressed;
 

@@ -1,4 +1,4 @@
-package com.example.proyectomovil;
+package com.example.proyectomovil.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.inputmethod.EditorInfo;
 
+import com.example.proyectomovil.R;
 import com.example.proyectomovil.databinding.ActivityRegisterBinding;
 import com.example.proyectomovil.utils.AlertUtils;
 
