@@ -8,19 +8,7 @@
     android:gravity="center_horizontal"
     tools:context=".DevicesFragment">
 
-    <Switch
-        android:id="@+id/camara_sala_switch"
-        android:layout_width="341dp"
-        android:layout_height="61dp"
-        android:text="Cámara Sala"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/rounded_switch"
-        android:drawableStart="@drawable/camera_icon"
-        android:drawableTint="@color/white"
-        android:paddingLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"/>
+
 
     <Switch
         android:id="@+id/camara_habitacion_switch"
@@ -49,5 +37,19 @@
         android:paddingLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:id="@+id/button_camara_sala_"
+        android:layout_width="341dp"
+        android:layout_height="61dp"
+        android:text="Cámara Sala"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/rounded_switch"
+        android:drawableStart="@drawable/camera_icon"
+        android:drawableTint="@color/white"
+        android:paddingLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp" />
 
 </LinearLayout>

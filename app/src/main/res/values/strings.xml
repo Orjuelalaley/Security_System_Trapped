@@ -22,5 +22,10 @@
     <string name="devices">Dispositivos</string>
     <string name="registrarse">Registrarse</string>
     <string name="registro">Registro</string>
+    <string name="Camara">Camara</string>
+    <string name="Galeria">Galeria</string>
+    <string name="Atras">Atrás</string>
+    <string name="snackBar_dismiss_label">cerrar</string>
+    <string name="permission_denied_label">No pude obtener el permiso necesario</string>
 
 </resources>
