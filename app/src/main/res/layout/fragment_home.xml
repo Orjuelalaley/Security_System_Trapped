@@ -16,7 +16,7 @@
         android:id="@+id/top_layout"
         android:layout_width="match_parent"
         android:layout_height="104dp"
-        android:background="@color/green_dark">
+        android:background="@color/green_800">
 
         <ImageView
             android:id="@+id/image_view"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/image_view"
-            android:text="Bienvenido a hogar seguro  "
+            android:text="@string/bienvenido_a_hogar_seguro"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="-257dp"
             android:layout_toEndOf="@id/welcome_text"
-            android:text=" Hola, Usuario "
+            android:text="@string/home"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -75,6 +75,7 @@
         android:layout_marginTop="38dp"
         android:layout_marginBottom="192dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/mapa" />
+        android:src="@drawable/mapa"
+        tools:ignore="ContentDescription" />
 
 </RelativeLayout>

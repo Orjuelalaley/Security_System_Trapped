@@ -39,5 +39,6 @@
     <string name="Registrarse">Registrarse</string>
     <string name="menu_profile">Perfil</string>
     <string name="manu_logout">Cerrar Sesión</string>
+    <string name="bienvenido_a_hogar_seguro">Bienvenido a hogar seguro</string>
 
 </resources>
