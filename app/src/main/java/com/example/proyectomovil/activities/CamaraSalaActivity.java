@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.Toast;
@@ -156,13 +157,8 @@ public class CamaraSalaActivity extends AppCompatActivity {
                     videoUri = data.getData();
                     binding.video.setVideoURI(videoUri);
                     binding.video.start();
-                    binding.video.setZOrderOnTop(true);
                     binding.video.setMediaController(new MediaController(this));
                     saveVideoToGallery();
-                    binding.video.setOnCompletionListener(mp -> {
-                        binding.buttonGallery.setVisibility(View.VISIBLE);
-                        binding.buttonTake.setVisibility(View.VISIBLE);
-                    });
                     Log.i(TAG, "onActivityResult: video capturado correctamente");
                 }
                 case GALLERY_VIDEO_PERMISSION_ID -> {
@@ -170,15 +166,7 @@ public class CamaraSalaActivity extends AppCompatActivity {
                     videoUri = data.getData();
                     binding.video.setVideoURI(videoUri);
                     binding.video.start();
-                    binding.buttonGallery.setVisibility(View.GONE);
-                    binding.buttonTake.setVisibility(View.GONE);
-                    binding.video.canPause();
-                    binding.video.setZOrderOnTop(true);
                     binding.video.setMediaController(new MediaController(this));
-                    binding.video.setOnCompletionListener(mp -> {
-                    binding.buttonGallery.setVisibility(View.VISIBLE);
-                    binding.buttonTake.setVisibility(View.VISIBLE);
-                    });
                     Log.i(TAG, "onActivityResult: video cargado correctamente.");
                 }
             }

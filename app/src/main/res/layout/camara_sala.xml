@@ -4,26 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:layout_margin="10dp">
+    android:layout_marginTop="30dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ConstraintLayout"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         tools:ignore="MissingConstraints">
 
         <VideoView
             android:id="@+id/video"
-            android:layout_width="400dp"
-            android:layout_height="600dp"
-            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="650dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="0dp" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            tools:ignore="MissingConstraints" />
+    </RelativeLayout>
 
 
         <com.google.android.material.button.MaterialButton
@@ -35,7 +33,7 @@
             android:backgroundTint="@color/green_800"
             android:text="@string/Camara"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ConstraintLayout" />
+            app:layout_constraintTop_toBottomOf="@id/linearLayout" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button_gallery"
@@ -46,7 +44,7 @@
         android:backgroundTint="@color/green_800"
         android:text="@string/Galeria"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ConstraintLayout" />
+        app:layout_constraintTop_toBottomOf="@id/linearLayout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
