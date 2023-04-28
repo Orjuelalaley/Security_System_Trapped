@@ -33,14 +33,8 @@ public class DevicesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.buttonCamaraSala.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(),CamaraSalaActivity.class));
-            }
-        });
+        binding.buttonCamaraSala.setOnClickListener(v -> startActivity(new Intent(getActivity(),CamaraSalaActivity.class)));
     }
-
-
 }
 
 

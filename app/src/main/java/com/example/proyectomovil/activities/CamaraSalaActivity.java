@@ -32,8 +32,6 @@ public class CamaraSalaActivity extends AppCompatActivity {
     private static final String TAG = CamaraSalaActivity.class.getName();
     CamaraSalaBinding binding;
 
-
-
     private final int CAMERA_VIDEO_PERMISSION_ID = 101;
 
     private final int GALLERY_VIDEO_PERMISSION_ID = 102;
@@ -63,16 +61,7 @@ public class CamaraSalaActivity extends AppCompatActivity {
                 startGalleryVideo(binding.getRoot());
             }
         });
-
-        binding.buttonAtras.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(CamaraSalaActivity.this, DevicesFragment.class));
-            }
-        });
-
-
     }
-
 
     private boolean requestPermission(Activity context, String[] permission, int id) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
@@ -150,11 +139,7 @@ public class CamaraSalaActivity extends AppCompatActivity {
             }
 
         }
-
     }
-
-
-
 
     public void startGalleryVideo(View view){
         Intent pickGalleryVideo = new Intent(Intent.ACTION_PICK,MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
@@ -166,30 +151,25 @@ public class CamaraSalaActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
-                case CAMERA_VIDEO_PERMISSION_ID:
-                    VideoView videoView = new VideoView(this);
-                    videoView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                    videoUri=data.getData();
-                    videoView.setVideoURI(data.getData());
-                    videoView.setMediaController(new MediaController(this));
-                    videoView.start();
-                    videoView.setZOrderOnTop(true);
+                case CAMERA_VIDEO_PERMISSION_ID -> {
+                    assert data != null;
+                    videoUri = data.getData();
+                    binding.video.setVideoURI(videoUri);
+                    binding.video.setMediaController(new MediaController(this));
+                    binding.video.start();
+                    binding.video.setZOrderOnTop(true);
                     saveVideoToGallery();
-                    binding.video.addView(videoView);
                     Log.i(TAG, "onActivityResult: video capturado correctamente");
-                    break;
-                case GALLERY_VIDEO_PERMISSION_ID:
-                    VideoView videoView1 = new VideoView(this);
-                    Uri videoUri = data.getData();
-                    videoView1.setVideoURI(videoUri);
-                    videoView1.setForegroundGravity(View.TEXT_ALIGNMENT_CENTER);
-                    videoView1.setMediaController(new MediaController(this));
-                    videoView1.start();
-                    videoView1.setZOrderOnTop(true);
-                    binding.video.addView(videoView1);
-
+                }
+                case GALLERY_VIDEO_PERMISSION_ID -> {
+                    assert data != null;
+                    videoUri = data.getData();
+                    binding.video.setVideoURI(videoUri);
+                    binding.video.setMediaController(new MediaController(this));
+                    binding.video.start();
+                    binding.video.setZOrderOnTop(true);
                     Log.i(TAG, "onActivityResult: video cargado correctamente.");
-                    break;
+                }
             }
         }
     }
