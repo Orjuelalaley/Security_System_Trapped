@@ -2,9 +2,7 @@ plugins {
     id 'com.android.application'
     id 'com.google.dagger.hilt.android'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -34,39 +32,30 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    packagingOptions {
-        jniLibs.pickFirsts.add("lib/**/libc++_shared.so")
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
 dependencies {
 
-    def hiltVer = "2.44"
+    def hiltVer = "2.45"
     implementation "com.google.dagger:hilt-android:$hiltVer"
     annotationProcessor "com.google.dagger:hilt-compiler:$hiltVer"
-
-    implementation 'com.google.code.gson:gson:2.9.1'
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     def lombokVer = "1.18.26"
     compileOnly "org.projectlombok:lombok:$lombokVer"
     annotationProcessor "org.projectlombok:lombok:$lombokVer"
 
+    def lottieVersion = "6.0.0"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
 
-    implementation "com.tomtom.sdk.maps:map-display:0.12.0"
-    implementation "com.tomtom.sdk.location:provider-gms:0.12.0"
-    def version = "0.12.0"
+    implementation 'com.google.firebase:firebase-auth:21.3.0'
+    implementation 'com.google.firebase:firebase-database-ktx:20.2.0'
+    implementation 'com.google.firebase:firebase-database:20.2.0'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.5.0'
+    implementation 'com.google.firebase:firebase-firestore:24.5.0'
 
-    implementation "com.tomtom.sdk.location:provider-android:$version"
-
-
-
-
-
-    implementation "com.tomtom.sdk.maps:map-display:0.12.0"
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.core:core-splashscreen:1.0.1'
@@ -74,15 +63,4 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-
-    kapt "com.google.dagger:hilt-compiler:2.44"
-
-}
-
-kapt {
-    correctErrorTypes true
 }
