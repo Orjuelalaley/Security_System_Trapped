@@ -7,7 +7,7 @@
         android:title="@string/info"
         android:icon="@drawable/nav_home" />
     <item
-        android:id="@+id/Configuración"
+        android:id="@+id/settings"
         android:title="@string/settings"
         android:icon="@drawable/nav_settings"
         />
@@ -23,6 +23,4 @@
         android:id="@+id/about"
         android:title="@string/help"
         android:icon="@drawable/baseline_info_24" />
-
-
 </menu>

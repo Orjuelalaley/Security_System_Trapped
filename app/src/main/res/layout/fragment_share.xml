@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ShareFragment">
+    tools:context=".activities.ShareFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
@@ -12,6 +12,6 @@
         android:text="Compartir"
         android:gravity="center"
         android:textSize="30sp"
-        android:textColor="@color/green"/>
+        android:textColor="@color/green_800"/>
 
 </FrameLayout>

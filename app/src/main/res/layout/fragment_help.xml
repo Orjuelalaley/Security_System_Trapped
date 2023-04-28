@@ -4,15 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HelpFragment">
+    tools:context=".activities.HelpFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Ayuda"
+        android:text="@string/help"
         android:textSize="30sp"
-        android:textColor="@color/green"
+        android:textColor="@color/green_800"
         android:gravity="center"
         />
 
