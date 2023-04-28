@@ -25,7 +25,6 @@
     <string name="password_label">Contraseña</string>
     <string name="phone">Teléfono</string>
     <string name="Name">Nombre</string>
-    <string name="snackBar_dismiss_label">Cerrar</string>
     <string name="Login">Iniciar Sesión</string>
     <string name="Register">Registrarse</string>
     <string name="mail_error_label">El email no puede estar vacio.</string>

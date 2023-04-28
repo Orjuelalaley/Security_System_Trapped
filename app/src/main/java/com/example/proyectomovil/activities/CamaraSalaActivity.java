@@ -1,4 +1,4 @@
-package com.example.proyectomovil;
+package com.example.proyectomovil.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -9,11 +9,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.Toast;
@@ -24,16 +22,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
+import com.example.proyectomovil.R;
 import com.example.proyectomovil.databinding.CamaraSalaBinding;
 import com.example.proyectomovil.utils.AlertUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 
 public class CamaraSalaActivity extends AppCompatActivity {
