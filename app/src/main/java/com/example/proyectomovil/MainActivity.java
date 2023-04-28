@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -24,6 +25,12 @@ import android.widget.Toast;
 import com.example.proyectomovil.databinding.ActivityMainBinding;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -31,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ActivityMainBinding binding;
     private static final int TIME_INTERVAL = 2000; // Intervalo de tiempo entre pulsaciones en milisegundos
     private long mBackPressed;
+    FirebaseApp inicar = FirebaseApp.initializeApp(this);
+    private DatabaseReference reference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +58,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
             binding.navView.setCheckedItem(R.id.nav_home);
         }
+
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // Obtiene el valor de la referencia de la base de datos
+                String value = snapshot.getValue(String.class);
+
+                // Si el valor es diferente de null
+                if (value != null) {
+                    // Si el valor es igual a 1
+                    if (value.equals("1")) {
+                        Toast.makeText(MainActivity.this, "El dispositvo detecto movimiento. ", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.home:
@@ -71,6 +102,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         );
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     @Override
     public void onBackPressed() {
         if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis()) {
