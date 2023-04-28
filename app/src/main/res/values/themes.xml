@@ -14,7 +14,7 @@
     </style>
     <style name="Theme.App.Starting" parent="Theme.ProyectoMovil">
         <item name="android:windowSplashScreenBackground" tools:targetApi="s">@color/white_1000</item>
-        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">@drawable/icon_simple</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">@mipmap/ic_launcher</item>
         <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="s">300</item>
         <item name="android:windowSplashScreenBrandingImage" tools:targetApi="s">@drawable/brand_name_bottom</item>
         <item name="postSplashScreenTheme">@style/Theme.ProyectoMovil</item>

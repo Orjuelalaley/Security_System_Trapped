@@ -9,7 +9,6 @@
     <string name="help">Ayuda</string>
     <string name="homeButtons">Home</string>
     <string name="username">Username</string>
-    <string name="login">Login</string>
     <string name="password">Password</string>
     <string name="signup">¿ No tienes una cuenta ? \n REGISTRATE AHORA !!</string>
     <string name="registration">REGISTRATE </string>
@@ -29,10 +28,10 @@
     <string name="snackBar_dismiss_label">Cerrar</string>
     <string name="Login">Iniciar Sesión</string>
     <string name="Register">Registrarse</string>
-    <string name="login_link">Iniciar Sesión</string>
     <string name="mail_error_label">El email no puede estar vacio.</string>
     <string name="error_email_label">El email no es valido.</string>
     <string name="error_pass_label">El password no puede estar vacio.</string>
+    <string name="error_cedula_label">La cedula no puede estar vacia.</string>
     <string name="error_name_label">El nombre no puede estar vacio.</string>
     <string name="error_phone_label">El teléfono no puede estar vacio.</string>
     <string name="ResetPassword">Olvido su contraseña</string>
@@ -41,5 +40,6 @@
     <string name="manu_logout">Cerrar Sesión</string>
     <string name="bienvenido_a_hogar_seguro">Bienvenido a hogar seguro</string>
     <string name="update">Acutalizar</string>
+    <string name="id">Cedula</string>
 
 </resources>

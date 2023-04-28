@@ -50,7 +50,7 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
             binding.navView.setCheckedItem(R.id.nav_home);
         }
-        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
+        /*binding.bottomNavigationView.setOnItemSelectedListener(item -> {
                     switch (item.getItemId()) {
                         case R.id.home:
                             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
@@ -70,7 +70,7 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
                     }
                     return true;
                 }
-        );
+        );*/
     }
 
     @Override
@@ -87,7 +87,7 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
+        /*switch (item.getItemId()) {
             case R.id.nav_home:
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
                 break;
@@ -102,7 +102,7 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
                 break;
             case R.id.nav_logout:
                 logout();
-        }
+        }*/
         binding.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }

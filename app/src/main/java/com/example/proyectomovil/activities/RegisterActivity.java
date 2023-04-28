@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.proyectomovil.R;
 import com.example.proyectomovil.databinding.ActivityRegisterBinding;
+import com.example.proyectomovil.model.User;
 import com.example.proyectomovil.utils.AlertUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,7 +44,7 @@ public class RegisterActivity extends BasicActivity {
             return;
         } else binding.registerFullName.setErrorEnabled(false);
 
-        /*if (Objects.requireNonNull(binding.registerPhone.getEditText()).getText().toString().isEmpty()) {
+        if (Objects.requireNonNull(binding.registerPhone.getEditText()).getText().toString().isEmpty()) {
             binding.registerPhone.setError(getString(R.string.error_phone_label));
             return;
         } else binding.registerPhone.setErrorEnabled(false);
@@ -52,13 +53,17 @@ public class RegisterActivity extends BasicActivity {
             binding.registerEmail.setError(getString(R.string.mail_error_label));
             return;
         } else binding.registerEmail.setErrorEnabled(false);
+        if (Objects.requireNonNull(binding.registerCedula.getEditText()).getText().toString().isEmpty()) {
+            binding.registerCedula.setError(getString(R.string.error_cedula_label));
+            return;
+        } else binding.registerCedula.setErrorEnabled(false);
         if (Objects.requireNonNull(binding.registerPass.getEditText()).getText().toString().isEmpty()) {
             binding.registerPass.setError(getString(R.string.error_pass_label));
             return;
         } else binding.registerPass.setErrorEnabled(false);
         progressDialog.setMessage("Registering user...");
         progressDialog.show();
-        binding.registerBtn.setVisibility(View.GONE);
+        binding.RegBtn.setVisibility(View.GONE);
         String name = binding.registerFullName.getEditText().getText().toString();
         String email = binding.registerEmail.getEditText().getText().toString();
         long phone = Long.parseLong(binding.registerPhone.getEditText().getText().toString());
@@ -95,8 +100,8 @@ public class RegisterActivity extends BasicActivity {
             } else {
                 alertsHelper.indefiniteSnackbar(binding.getRoot(), Objects.requireNonNull(task.getException()).getLocalizedMessage());
                 progressDialog.cancel();
-                binding.registerBtn.setVisibility(View.VISIBLE);
+                binding.RegBtn.setVisibility(View.VISIBLE);
             }
         });
-    */}
+    }
 }

@@ -25,13 +25,11 @@ public class LoginActivity extends BasicActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
-        Objects.requireNonNull(getSupportActionBar()).hide();
         binding = ActivityLogInBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         progressDialog = new ProgressDialog(this);
         binding.loginButton.setOnClickListener(v -> doLogin());
-
-        binding.gotToRegister.setOnClickListener(view -> {new Intent(LoginActivity.this, RegisterActivity.class);});
+        binding.signupButton.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
     }
 
     private void doLogin() {
