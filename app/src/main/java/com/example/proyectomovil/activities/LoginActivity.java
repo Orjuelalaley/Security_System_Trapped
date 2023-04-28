@@ -69,7 +69,6 @@ public class LoginActivity extends BasicActivity {
         } else {
             Toast.makeText(getBaseContext(), "Presiona de nuevo para salir", Toast.LENGTH_SHORT).show();
         }
-
         mBackPressed = System.currentTimeMillis();
     }
 }

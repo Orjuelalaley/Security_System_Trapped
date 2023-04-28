@@ -17,11 +17,10 @@
         android:textColor="#FFFFFF"
         android:background="@drawable/rounded_switch"
         android:drawableStart="@drawable/camera_icon"
-        android:drawableTint="@color/white"
+        android:drawableTint="@color/white_1000"
         android:paddingLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"/>
-
     <Switch
         android:id="@+id/camara_habitacion_switch"
         android:layout_width="341dp"
@@ -31,7 +30,7 @@
         android:textColor="#FFFFFF"
         android:background="@drawable/rounded_switch"
         android:drawableStart="@drawable/camera_icon"
-        android:drawableTint="@color/white"
+        android:drawableTint="@color/white_1000"
         android:paddingLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"/>
@@ -45,7 +44,7 @@
         android:textColor="#FFFFFF"
         android:background="@drawable/rounded_switch"
         android:drawableStart="@drawable/sensor_icon"
-        android:drawableTint="@color/white"
+        android:drawableTint="@color/white_1000"
         android:paddingLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"/>

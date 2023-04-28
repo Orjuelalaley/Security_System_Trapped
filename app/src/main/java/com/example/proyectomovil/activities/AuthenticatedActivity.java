@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.firebaseauth.R;
+import com.example.proyectomovil.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -20,18 +20,17 @@ public class AuthenticatedActivity extends BasicActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.user_menu, menu);
+        getMenuInflater().inflate(R.menu.nav_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == R.id.menu_profile){
+        if(item.getItemId() == R.id.nav_settings){
             startActivity(new Intent(this, ProfileActivity.class));
-        } else if(item.getItemId() == R.id.menu_logout){
+        } else if(item.getItemId() == R.id.nav_logout){
             logout();
         }
         return super.onOptionsItemSelected(item);

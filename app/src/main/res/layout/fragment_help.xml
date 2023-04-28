@@ -10,9 +10,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Ayuda"
+        android:text="@string/help"
         android:textSize="30sp"
-        android:textColor="@color/green"
+        android:textColor="@color/green_800"
         android:gravity="center"
         />
 

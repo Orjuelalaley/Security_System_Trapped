@@ -12,6 +12,6 @@
         android:text="Compartir"
         android:gravity="center"
         android:textSize="30sp"
-        android:textColor="@color/green"/>
+        android:textColor="@color/green_800"/>
 
 </FrameLayout>
