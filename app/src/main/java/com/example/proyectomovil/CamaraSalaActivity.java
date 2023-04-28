@@ -62,11 +62,15 @@ public class CamaraSalaActivity extends AppCompatActivity {
 
         binding.video.setVisibility(View.VISIBLE);
         binding.buttonTake.setOnClickListener(view -> {
-            if(requestPermission(CamaraSalaActivity.this, new String[]{camaraPerm, storagePerm,storageWritePerm}, CAMERA_VIDEO_PERMISSION_ID)){
+            if(requestPermission(CamaraSalaActivity.this, new String[]{camaraPerm,storageWritePerm}, CAMERA_VIDEO_PERMISSION_ID)){
                 startCameraVideo(binding.getRoot());
             }
         });
-        binding.buttonGallery.setOnClickListener(view -> startGalleryVideo(binding.getRoot()));
+        binding.buttonGallery.setOnClickListener(view -> {
+            if (requestGalleryPermission(this, storagePerm, GALLERY_VIDEO_PERMISSION_ID)){
+                startGalleryVideo(binding.getRoot());
+            }
+        });
 
         binding.buttonAtras.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -77,27 +81,8 @@ public class CamaraSalaActivity extends AppCompatActivity {
 
     }
 
-    /*private boolean requestPermission(Activity context,String permission, int id){
-        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{permission},
-                    id);
-            return false;
-        }
-        return true;
-    }
-    private boolean requestGalleryPermission(Activity context, String permission, int id){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(
-                    context,
-                    new String[]{permission},
-                    id);
-            return false;
-        }
-        return true;
-    }¨*/
-   private boolean requestPermission(Activity context, String[] permission, int id) {
+
+    private boolean requestPermission(Activity context, String[] permission, int id) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
@@ -107,7 +92,7 @@ public class CamaraSalaActivity extends AppCompatActivity {
             Log.w(TAG, "requestPermission: HOLA");
             return false;
         }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                     this,
@@ -116,18 +101,19 @@ public class CamaraSalaActivity extends AppCompatActivity {
             Log.w(TAG, "requestPermission: HOLA");
             return false;
         }
-       if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-               != PackageManager.PERMISSION_GRANTED) {
-           ActivityCompat.requestPermissions(
-                   this,
-                   permission,
-                   id);
-           Log.w(TAG, "requestPermission: HOLA");
-           return false;
-       }
         return true;
     }
 
+    private boolean requestGalleryPermission(Activity context, String permission, int id){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(
+                    context,
+                    new String[]{permission},
+                    id);
+            return false;
+        }
+        return true;
+    }
 
 
     private void initView(){
@@ -145,6 +131,9 @@ public class CamaraSalaActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(requestCode == CAMERA_VIDEO_PERMISSION_ID){
             startCameraVideo(binding.getRoot());
+        }
+        if(requestCode == GALLERY_VIDEO_PERMISSION_ID){
+            startGalleryVideo(binding.getRoot());
         }
     }
 
@@ -173,7 +162,7 @@ public class CamaraSalaActivity extends AppCompatActivity {
     }
 
 
-    
+
 
     public void startGalleryVideo(View view){
         Intent pickGalleryVideo = new Intent(Intent.ACTION_PICK,MediaStore.Video.Media.EXTERNAL_CONTENT_URI);

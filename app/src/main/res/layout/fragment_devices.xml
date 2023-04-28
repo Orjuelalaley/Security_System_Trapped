@@ -9,47 +9,31 @@
     tools:context=".DevicesFragment">
 
 
-
-    <Switch
-        android:id="@+id/camara_habitacion_switch"
+    <Button
+        android:id="@+id/button_camara_sala_"
         android:layout_width="341dp"
         android:layout_height="61dp"
-        android:text="Cámara habitación"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/rounded_switch"
-        android:drawableStart="@drawable/camera_icon"
-        android:drawableTint="@color/white"
-        android:paddingLeft="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/verdeTrappedClaro"
+        android:drawableStart="@drawable/camera_icon"
+        android:paddingLeft="20dp"
+        android:text="Cámara Sala"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF" />
 
     <Switch
         android:id="@+id/sensor_movimiento_sala_switch"
         android:layout_width="341dp"
         android:layout_height="61dp"
-        android:text="Sensor de movimiento sala"
-        android:textAlignment="center"
-        android:textColor="#FFFFFF"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/rounded_switch"
         android:drawableStart="@drawable/sensor_icon"
         android:drawableTint="@color/white"
         android:paddingLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"/>
-
-    <Button
-        android:id="@+id/button_camara_sala_"
-        android:layout_width="341dp"
-        android:layout_height="61dp"
-        android:text="Cámara Sala"
+        android:text="Sensor de movimiento sala"
         android:textAlignment="center"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/rounded_switch"
-        android:drawableStart="@drawable/camera_icon"
-        android:drawableTint="@color/white"
-        android:paddingLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp" />
+        android:textColor="#FFFFFF" />
 
 </LinearLayout>

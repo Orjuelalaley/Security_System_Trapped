@@ -4,20 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constrain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="-117dp"
-        tools:layout_editor_absoluteY="-88dp">
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="-99dp">
 
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/button_take"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="48dp"
-            android:layout_marginBottom="72dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginBottom="44dp"
             android:backgroundTint="@color/verdeTrappedClaro"
             android:text="@string/Camara"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -27,8 +28,8 @@
             android:id="@+id/button_gallery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="68dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="40dp"
             android:backgroundTint="@color/verdeTrappedClaro"
             android:text="@string/Galeria"
             app:layout_constraintEnd_toEndOf="parent"
@@ -43,8 +44,7 @@
             android:backgroundTint="@color/verdeTrappedClaro"
             android:text="@string/Atras"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/video"
