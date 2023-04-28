@@ -1,9 +1,10 @@
-package com.example.proyectomovil;
+package com.example.proyectomovil.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.example.proyectomovil.R;
 import com.example.proyectomovil.databinding.ActivityAddDeviceBinding;
 
 public class AddDeviceActivity extends AppCompatActivity {

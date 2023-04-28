@@ -5,97 +5,119 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/loginbkg2"
-    android:baselineAligned="true"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:theme="@style/StatusBar">
+    android:theme="@style/StatusBar"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.RegisterActivity">
 
-    <androidx.cardview.widget.CardView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:background="@drawable/custom_edittext"
-        app:cardCornerRadius="30dp"
-        app:cardElevation="20dp">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="vertical"
-            android:padding="24dp">
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:background="@drawable/custom_edittext"
+            app:cardCornerRadius="30dp"
+            android:layout_gravity="center"
+            app:cardElevation="10dp">
 
-            <TextView
-                android:id="@+id/loginText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="20dp"
-                android:text="@string/login"
-                android:textAlignment="center"
-                android:textSize="36sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/username"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:autofillHints=""
-                android:background="@drawable/custom_edittext"
-                android:drawableStart="@drawable/baseline_person_24"
-                android:drawablePadding="10dp"
-                android:hint="@string/username"
-                android:inputType="text"
-                android:padding="10dp"
-                android:textColor="@color/black"
-                android:textColorHighlight="@color/white">
-            </EditText>
+                android:orientation="vertical"
+                android:padding="20dp">
 
-            <EditText
-                android:id="@+id/password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:autofillHints=""
-                android:background="@drawable/custom_edittext"
-                android:drawableStart="@drawable/baseline_lock_24"
-                android:drawablePadding="8dp"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:padding="10dp"
-                android:textColor="@color/black"
-                android:textColorHighlight="@color/white">
-            </EditText>
+                <TextView
+                    android:id="@+id/loginText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="20dp"
+                    android:text="@string/Login"
+                    android:textAlignment="center"
+                    android:textSize="36sp"
+                    android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/loginBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:backgroundTint="@color/grey"
-                android:text="@string/login"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:cornerRadius="20dp">
-            </Button>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/animationView"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.39"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/loginText"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/data_security_animation" />
 
-    <Button
-        android:id="@+id/registratonBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/grey"
-        android:fontFamily="sans-serif-medium"
-        android:padding="6dp"
-        android:text="@string/signup"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:cornerRadius="30dp"
-        android:imeOptions="actionDone"
-        tools:ignore="TextViewEdits">
-    </Button>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/loginEmail"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/email_label"
+                    android:inputType="textEmailAddress"
+                    android:minHeight="50dp"
+                    app:endIconMode="clear_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/animationView"
+                    app:startIconDrawable="@drawable/baseline_email_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="50"
+                        android:imeOptions="actionNext"
+                        android:inputType="textEmailAddress"
+                        android:maxLines="1"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/loginPassword"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:hint="@string/password_label"
+                    android:minHeight="50dp"
+                    app:endIconMode="password_toggle"
+                    app:layout_constraintTop_toBottomOf="@+id/loginEmail"
+                    app:startIconDrawable="@drawable/baseline_password_24">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/loginButton"
+                    style="@style/TextColor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:text="@string/Login"
+                    app:layout_constraintEnd_toStartOf="@+id/signupButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/loginPassword" />
+
+                <Button
+                    android:id="@+id/signupButton"
+                    style="@style/TextColor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="@string/Registrarse"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/loginButton"
+                    app:layout_constraintTop_toBottomOf="@+id/loginPassword" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.core.widget.NestedScrollView>
+
 </LinearLayout>

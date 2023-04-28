@@ -23,6 +23,4 @@
         android:id="@+id/about"
         android:title="@string/help"
         android:icon="@drawable/baseline_info_24" />
-
-
 </menu>

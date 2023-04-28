@@ -1,4 +1,4 @@
-package com.example.proyectomovil;
+package com.example.proyectomovil.activities;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.proyectomovil.R;
 import com.example.proyectomovil.databinding.FragmentDevicesBinding;
 
 public class DevicesFragment extends Fragment {
