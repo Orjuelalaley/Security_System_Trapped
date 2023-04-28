@@ -7,7 +7,7 @@
         android:title="@string/info"
         android:icon="@drawable/nav_home" />
     <item
-        android:id="@+id/Configuración"
+        android:id="@+id/settings"
         android:title="@string/settings"
         android:icon="@drawable/nav_settings"
         />

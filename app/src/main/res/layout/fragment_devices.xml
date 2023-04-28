@@ -8,7 +8,6 @@
     android:gravity="center_horizontal"
     tools:context=".activities.DevicesFragment">
 
-
     <Button
         android:id="@+id/button_camara_sala_"
         android:layout_width="341dp"
@@ -18,8 +17,10 @@
             android:backgroundTint="@color/green_800"
         android:drawableStart="@drawable/camera_icon"
         android:drawableTint="@color/white_1000"
-        android:paddingLeft="20dp"
-        android:text="Cámara Sala"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/camara_room"
+
         android:textAlignment="center"
         android:textColor="#FFFFFF" />
 
@@ -32,9 +33,11 @@
         android:background="@drawable/rounded_switch"
         android:drawableStart="@drawable/sensor_icon"
         android:drawableTint="@color/white_1000"
-        android:paddingLeft="20dp"
-        android:text="Sensor de movimiento sala"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/movement_sensor"
         android:textAlignment="center"
-        android:textColor="#FFFFFF" />
+        android:textColor="#FFFFFF"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
 </LinearLayout>

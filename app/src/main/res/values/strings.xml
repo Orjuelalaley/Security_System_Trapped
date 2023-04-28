@@ -38,12 +38,15 @@
     <string name="menu_profile">Perfil</string>
     <string name="manu_logout">Cerrar Sesión</string>
     <string name="bienvenido_a_hogar_seguro">Bienvenido a hogar seguro</string>
-    <string name="update">Acutalizar</string>
+    <string name="update">Actualizar</string>
     <string name="id">Cedula</string>
     <string name="Camara">Camara</string>
     <string name="Galeria">Galeria</string>
     <string name="Atras">Atrás</string>
     <string name="snackBar_dismiss_label">cerrar</string>
     <string name="permission_denied_label">No pude obtener el permiso necesario</string>
+    <string name="switchUserPositionLabel">Seguir mi ubicación</string>
+    <string name="camara_room">Cámara Sala</string>
+    <string name="movement_sensor">Sensor de movimiento sala</string>
 
 </resources>

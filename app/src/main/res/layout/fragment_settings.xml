@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:hint="Name"
+                android:hint="@string/Name"
                 android:minHeight="48dp"
 
                 app:startIconDrawable="@drawable/baseline_person_24"
@@ -49,7 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:hint="Phone"
+                android:hint="@string/phone"
                 android:minHeight="48dp"
                 app:counterEnabled="true"
                 app:counterMaxLength="10"
@@ -67,11 +67,12 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Cedula"
+                android:hint="@string/id"
                 android:minHeight="48dp"
                 app:counterEnabled="true"
                 app:counterMaxLength="10"
-                app:layout_constraintTop_toBottomOf="@+id/profilePhone">
+                app:layout_constraintTop_toBottomOf="@+id/profilePhone"
+                app:startIconDrawable="@drawable/baseline_adjust_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
