@@ -19,7 +19,7 @@
             android:layout_margin="15dp"
             android:background="@drawable/custom_edittext"
             app:cardCornerRadius="30dp"
-            android:layout_gravity="center"
+            android:layout_gravity="top"
             app:cardElevation="10dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -100,6 +100,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
+                    android:layout_marginEnd="15dp"
                     android:text="@string/Login"
                     app:layout_constraintEnd_toStartOf="@+id/signupButton"
                     app:layout_constraintStart_toStartOf="parent"
@@ -111,7 +112,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginEnd="15dp"
                     android:text="@string/Registrarse"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/loginButton"

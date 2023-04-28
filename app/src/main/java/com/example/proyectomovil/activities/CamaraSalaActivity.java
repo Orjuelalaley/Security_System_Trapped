@@ -155,19 +155,30 @@ public class CamaraSalaActivity extends AppCompatActivity {
                     assert data != null;
                     videoUri = data.getData();
                     binding.video.setVideoURI(videoUri);
-                    binding.video.setMediaController(new MediaController(this));
                     binding.video.start();
                     binding.video.setZOrderOnTop(true);
+                    binding.video.setMediaController(new MediaController(this));
                     saveVideoToGallery();
+                    binding.video.setOnCompletionListener(mp -> {
+                        binding.buttonGallery.setVisibility(View.VISIBLE);
+                        binding.buttonTake.setVisibility(View.VISIBLE);
+                    });
                     Log.i(TAG, "onActivityResult: video capturado correctamente");
                 }
                 case GALLERY_VIDEO_PERMISSION_ID -> {
                     assert data != null;
                     videoUri = data.getData();
                     binding.video.setVideoURI(videoUri);
-                    binding.video.setMediaController(new MediaController(this));
                     binding.video.start();
+                    binding.buttonGallery.setVisibility(View.GONE);
+                    binding.buttonTake.setVisibility(View.GONE);
+                    binding.video.canPause();
                     binding.video.setZOrderOnTop(true);
+                    binding.video.setMediaController(new MediaController(this));
+                    binding.video.setOnCompletionListener(mp -> {
+                    binding.buttonGallery.setVisibility(View.VISIBLE);
+                    binding.buttonTake.setVisibility(View.VISIBLE);
+                    });
                     Log.i(TAG, "onActivityResult: video cargado correctamente.");
                 }
             }
@@ -183,5 +194,10 @@ public class CamaraSalaActivity extends AppCompatActivity {
         getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
 
         Toast.makeText(this, "Video guardado en la galería", Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }
