@@ -4,8 +4,15 @@
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
+        android:required="true" />
 
+
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="true"/>
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
 
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,6 +23,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -33,6 +41,9 @@
             android:value="AIzaSyBqx3TGwxFg_QrQDeN6Gpmx5p-dOzTWIwg" />
         <activity
             android:name=".activities.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.CamaraSalaActivity"
             android:exported="false" />
         <activity
             android:name=".activities.CamaraHabitacionActivity"

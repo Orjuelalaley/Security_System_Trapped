@@ -48,5 +48,6 @@
     <string name="switchUserPositionLabel">Seguir mi ubicación</string>
     <string name="camara_room">Cámara Sala</string>
     <string name="movement_sensor">Sensor de movimiento sala</string>
+    <string name="fix_position_label">Seguir al usuario\n</string>
 
 </resources>

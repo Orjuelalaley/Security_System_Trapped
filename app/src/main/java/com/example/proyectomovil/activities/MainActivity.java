@@ -3,19 +3,32 @@ package com.example.proyectomovil.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.Window;
+
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -42,6 +55,10 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
     private static final int TIME_INTERVAL = 2000; // Intervalo de tiempo entre pulsaciones en milisegundos
     private long mBackPressed;
 
+    SensorManager sensorManager;
+    Sensor sensor;
+    Sensor sensorTemp;
+    SensorEventListener sensorEventListener;
     @Inject
     PermissionService permissionService;
 
@@ -64,6 +81,69 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+       sensorTemp = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+
+        if(sensor == null){
+            finish();
+        }
+
+       if(sensorTemp == null){
+            finish();
+       }
+        sensorEventListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+                    float x = event.values[0]; // Valor del eje x
+
+                    if(x < -5){
+                        Toast.makeText(MainActivity.this, "¡Llamando a la policia!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:3005609505"));
+                        if(ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED){
+                            return;
+                        }
+                        startActivity(intent);
+                    }
+                }/*else if(event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE){
+                    float temp = event.values[0];
+                    if(temp > 30){
+                        Toast.makeText(MainActivity.this, "¡Cuidado! La temperatura es muy alta", Toast.LENGTH_SHORT).show();
+                    }else if(temp < 0){
+                        Toast.makeText(MainActivity.this, "¡Cuidado! La temperatura es muy baja", Toast.LENGTH_SHORT).show();
+                    }
+                }*/
+            }
+
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+            }
+
+
+        };
+
+       /*
+        locationService.setLocationCallback(new LocationCallback() {
+            @Override
+            public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
+                super.onLocationAvailability(locationAvailability);
+            }
+
+            @Override
+            public void onLocationResult(@NonNull LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                HomeFragment fragment = ((HomeFragment) binding.frameLayout).binding.map.getFragment();
+                fragment.updateUserPositionOnMap(locationResult);
+            }
+        });*/
+
+
+
+
+        start();
 
     }
 
@@ -88,7 +168,7 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
                     switch (item.getItemId()) {
                         case R.id.home:
-                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()    ).commit();
                             break;
                         case R.id.settings:
                             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
@@ -128,7 +208,7 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_home:
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new TomMapFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
                 break;
             case R.id.nav_settings:
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
@@ -204,5 +284,14 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
                 locationService.startLocation();
             }
         }
+    }
+
+    private void start(){
+        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(sensorEventListener, sensorTemp, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    private void stop(){
+        sensorManager.unregisterListener(sensorEventListener);
     }
 }

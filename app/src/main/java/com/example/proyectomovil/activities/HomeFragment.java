@@ -8,6 +8,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -17,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +28,10 @@ import com.example.proyectomovil.R;
 import com.example.proyectomovil.databinding.FragmentHomeBinding;
 import com.example.proyectomovil.services.GeoInfoFromJsonService;
 import com.example.proyectomovil.services.GeocoderService;
+import com.example.proyectomovil.services.LocationService;
 import com.example.proyectomovil.utils.BitmapUtils;
+import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -64,7 +69,10 @@ public class HomeFragment extends Fragment {
     @Inject
     GeocoderService geocoderService;
 
-    FragmentHomeBinding binding;
+    @Inject
+    LocationService locationService;
+
+    public FragmentHomeBinding binding;
 
 
     //Map interaction variables
@@ -143,8 +151,16 @@ public class HomeFragment extends Fragment {
                 }
             });
 
+
+
         }
     };
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 
     @Nullable
     @Override
@@ -250,7 +266,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    /*public void updateUserPositionOnMap(@NotNull LocationResult locationResult) {
+    public void updateUserPositionOnMap(@NotNull LocationResult locationResult) {
         userPosition.setPosition(new LatLng(locationResult.getLastLocation().getLatitude(), locationResult.getLastLocation().getLongitude()));
         List<LatLng> points = userRoute.getPoints();
         points.add(userPosition.getPosition());
@@ -258,9 +274,9 @@ public class HomeFragment extends Fragment {
         userRoute.setPoints(points);
         if (binding.isCameraFixedToUser.isChecked()) {
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(userPosition.getPosition()));
-//            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userPosition.getPosition(), INITIAL_ZOOM_LEVEL));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userPosition.getPosition(), INITIAL_ZOOM_LEVEL));
         }
-    }*/
+    }
 
     /*public void dibujarRutas(LatLng origen, LatLng destino){
         RequestQueue mRequestQueue = Volley.newRequestQueue(MapsFragment.this.getContext());
