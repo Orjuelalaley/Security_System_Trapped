@@ -3,14 +3,22 @@ package com.example.proyectomovil.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Gravity;
@@ -38,8 +46,10 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
     FirebaseAuth auth = FirebaseAuth.getInstance();
     private static final int TIME_INTERVAL = 2000; // Intervalo de tiempo entre pulsaciones en milisegundos
     private long mBackPressed;
-    FirebaseApp inicar = FirebaseApp.initializeApp(this);
-    private DatabaseReference reference;
+    SensorManager sensorManager;
+    Sensor sensor;
+    Sensor sensorTemp;
+    SensorEventListener sensorEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,26 +70,49 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
             binding.navView.setCheckedItem(R.id.nav_home);
         }
 
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Obtiene el valor de la referencia de la base de datos
-                String value = snapshot.getValue(String.class);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorTemp = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
 
-                // Si el valor es diferente de null
-                if (value != null) {
-                    // Si el valor es igual a 1
-                    if (value.equals("1")) {
-                        Toast.makeText(MainActivity.this, "El dispositvo detecto movimiento. ", Toast.LENGTH_SHORT).show();
+        if(sensor == null){
+            finish();
+        }
+
+        if(sensorTemp == null){
+            finish();
+        }
+
+        sensorEventListener = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+                    float x = event.values[0]; // Valor del eje x
+
+                    if(x < -5){
+                        Toast.makeText(MainActivity.this, "¡Llamando a la policia!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:123456789"));
+                        if(ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED){
+                            return;
+                        }
+                        startActivity(intent);
+                    }
+                }else if(event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE){
+                    float temp = event.values[0];
+                    if(temp > 30){
+                        Toast.makeText(MainActivity.this, "¡Cuidado! La temperatura es muy alta", Toast.LENGTH_SHORT).show();
+                    }else if(temp < 0){
+                        Toast.makeText(MainActivity.this, "¡Cuidado! La temperatura es muy baja", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
             }
         };
+
+        start();
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.home) {
@@ -96,6 +129,15 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
                     return true;
                 }
         );
+    }
+
+    private void start(){
+        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(sensorEventListener, sensorTemp, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    private void stop(){
+        sensorManager.unregisterListener(sensorEventListener);
     }
 
     @Override
