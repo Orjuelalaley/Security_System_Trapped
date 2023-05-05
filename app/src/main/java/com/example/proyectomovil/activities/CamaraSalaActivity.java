@@ -130,6 +130,7 @@ public class CamaraSalaActivity extends AppCompatActivity {
         }
     }
 
+
     private void openCameraVideo() {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
@@ -138,8 +139,8 @@ public class CamaraSalaActivity extends AppCompatActivity {
             } catch (ActivityNotFoundException e) {
                 Log.e(TAG, e.getLocalizedMessage());
             }
-
         }
+        //finish
     }
 
     public void startGalleryVideo(View view){

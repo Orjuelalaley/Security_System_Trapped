@@ -6,6 +6,8 @@
         android:name="android.hardware.camera"
         android:required="false" />
 
+
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -25,12 +27,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProyectoMovil"
         tools:targetApi="s">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBqx3TGwxFg_QrQDeN6Gpmx5p-dOzTWIwg" />
         <activity
             android:name=".activities.RegisterActivity"
             android:exported="false" />
-        <activity
-            android:name=".activities.CamaraSalaActivity"
-            android:exported="true" />
         <activity
             android:name=".activities.CamaraHabitacionActivity"
             android:exported="false" />
