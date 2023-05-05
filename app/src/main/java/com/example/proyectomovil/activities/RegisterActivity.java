@@ -16,15 +16,19 @@ import com.example.proyectomovil.R;
 import com.example.proyectomovil.databinding.ActivityRegisterBinding;
 import com.example.proyectomovil.model.User;
 import com.example.proyectomovil.utils.AlertUtils;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.ktx.Firebase;
 
 import java.util.Objects;
 
 public class RegisterActivity extends BasicActivity {
     private ActivityRegisterBinding binding;
     FirebaseAuth auth = FirebaseAuth.getInstance();
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseDatabase db = FirebaseDatabase.getInstance();
     ProgressDialog progressDialog;
 
     @Override
@@ -85,7 +89,9 @@ public class RegisterActivity extends BasicActivity {
                     @Override
                     public void onAnimationEnd(@NonNull Animator animation) {
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                        db.collection("Users").document(Objects.requireNonNull(auth.getCurrentUser()).getUid()).set(user);
+                        DatabaseReference userRef = db.getReference("Users").child(Objects.requireNonNull(auth.getCurrentUser()).getUid());
+                        userRef.setValue(user);
+
                         finish();  // finish the activity
                     }
 

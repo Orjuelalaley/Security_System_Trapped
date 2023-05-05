@@ -297,5 +297,16 @@
     <color name="blue_grey_700">#455A64</color>
     <color name="blue_grey_800">#37474F</color>
     <color name="blue_grey_900">#263238</color>
+    <color name="verdeTrappedClaro">#64DA7B</color>
+    <color name="verdeTrappedOscuro">#237506</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="green">#FF00FF00</color>
+    <color name="green_dark">#009000</color>
+
+    <color name="black">#FF000000</color>
+
+    <color name="grey">#5C6D5C</color>
+
+    <color name="red">#FF0000</color>
 
 </resources>

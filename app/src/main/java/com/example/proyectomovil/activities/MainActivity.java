@@ -30,6 +30,11 @@ import android.widget.Toast;
 
 import com.example.proyectomovil.R;
 import com.example.proyectomovil.databinding.ActivityMainBinding;
+import com.example.proyectomovil.services.LocationService;
+import com.example.proyectomovil.services.PermissionService;
+import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.FirebaseApp;
@@ -39,7 +44,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+
+@AndroidEntryPoint
 public class MainActivity extends BasicActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ActivityMainBinding binding;
@@ -50,6 +60,14 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
     Sensor sensor;
     Sensor sensorTemp;
     SensorEventListener sensorEventListener;
+
+    @Inject
+    PermissionService permissionService;
+
+    @Inject
+    LocationService locationService;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +83,24 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        if (savedInstanceState == null) {
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //if (savedInstanceState == null) {
+            locationService.setLocationCallback(new LocationCallback() {
+                @Override
+                public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
+                    super.onLocationAvailability(locationAvailability);
+                }
+
+                @Override
+                public void onLocationResult(@NonNull LocationResult locationResult) {
+                    super.onLocationResult(locationResult);
+                }
+            });
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
             binding.navView.setCheckedItem(R.id.nav_home);
         }
@@ -114,21 +149,32 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
 
         start();
 
+       // }
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.home) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
-            } else if (item.getItemId() == R.id.settings) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
-            } else if (item.getItemId() == R.id.homeButton) {
-                showBottomDialog();
-            } else if (item.getItemId() == R.id.dispositivos) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new DevicesFragment()).commit();
-            } else if (item.getItemId() == R.id.about) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
-            }
+                    switch (item.getItemId()) {
+                        case R.id.home:
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
+                            break;
+                        case R.id.settings:
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
+                            break;
+                        case R.id.homeButton:
+                            showBottomDialog();
+                            break;
+                        case R.id.dispositivos:
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new DevicesFragment()).commit();
+                            break;
+                        case R.id.about:
+                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
+                            break;
+                    }
                     return true;
                 }
         );
+        permissionService.getLocationPermission(this);
+        if (permissionService.isMLocationPermissionGranted()) {
+            locationService.startLocation();
+        }
     }
 
     private void start(){
@@ -207,5 +253,22 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setGravity(Gravity.BOTTOM);
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        locationService.stopLocation();
+    }
+
+
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionService.PERMISSIONS_REQUEST_LOCATION) {
+            permissionService.getLocationPermission(this);
+            if (permissionService.isMLocationPermissionGranted()) {
+                locationService.startLocation();
+            }
+        }
     }
 }
