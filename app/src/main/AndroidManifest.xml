@@ -5,17 +5,16 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
-
-
     <uses-feature
         android:name="android.hardware.sensor.accelerometer"
         android:required="true"/>
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false" />
-
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.location.gps" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
@@ -39,7 +38,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBqx3TGwxFg_QrQDeN6Gpmx5p-dOzTWIwg" />
+            android:value="AIzaSyA6cAJOsBgDyuLW14Hrh0JsXXbS8tUuMTU" />
         <activity
             android:name=".activities.RegisterActivity"
             android:exported="false" />
@@ -60,16 +59,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data
-                android:name="com.google.firebase.components:com.google.firebase.auth.FirebaseAuthRegistrar"
-                android:value="com.google.firebase.components.ComponentRegistrar" />
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
         </activity>
-        <meta-data
-            android:name="android.app.lib_name"
-            android:value="" />
         <activity
             android:name=".activities.MainActivity"
             android:exported="false">

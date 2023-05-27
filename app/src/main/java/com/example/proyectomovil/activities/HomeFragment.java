@@ -54,6 +54,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -61,7 +62,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class HomeFragment extends Fragment {
-
+/*
 
     @Inject
     GeoInfoFromJsonService geoInfoFromJsonService;
@@ -88,81 +89,65 @@ public class HomeFragment extends Fragment {
     //light sensor
     SensorManager sensorManager;
     Sensor lightSensor;
+
     SensorEventListener lightSensorEventListener;
-
-
     Marker marker;
-
-
-
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
-
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
-        @Override
-        public void onMapReady(GoogleMap map) {
-            //Setup the map
-            googleMap = map;
-            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.map_day_style));
-            googleMap.moveCamera(CameraUpdateFactory.zoomTo(INITIAL_ZOOM_LEVEL));
-            googleMap.getUiSettings().setAllGesturesEnabled(true);
-            googleMap.getUiSettings().setZoomControlsEnabled(true);
-            googleMap.getUiSettings().setZoomGesturesEnabled(true);
-            googleMap.getUiSettings().setCompassEnabled(true);
-            //Setup the user marker with a default position
-            userPosition = googleMap.addMarker(new MarkerOptions()
-                    .position(UNIVERSIDAD)
-                    .icon(BitmapUtils.getBitmapDescriptor(getContext(), R.drawable.baseline_person_pin_circle_24))
-                    .title("Usted esta aqui!")
-                    .snippet("Y otra cosas")
-                    .anchor(0.5f, 1.0f)
-                    .zIndex(1.0f));
-
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(UNIVERSIDAD));
-
-            //Setup the route line
-            userRoute = googleMap.addPolyline(new PolylineOptions()
-                    .color(R.color.green_500)
-                    .width(30.0f)
-                    .geodesic(true)
-                    .zIndex(0.5f));
-            //Setup the rest of the markers based in a json file
-            loadGeoInfo();
-
-            googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-
-                @Override
-                public void onMapLongClick(@NonNull LatLng latLng) {
-                    if(marker!=null){
-                        marker.remove();
-                    }
-                    MarkerOptions markerOption = new MarkerOptions();
-                    markerOption.position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Ubicación seleccionada")
-                            .snippet(latLng.toString());
-                    marker = googleMap.addMarker(markerOption);
-                    //dibujarRutas(userPosition.getPosition(),marker.getPosition());
-                }
-            });
-
-
-
-        }
-    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sensorManager = (SensorManager) requireContext().getSystemService(Context.SENSOR_SERVICE);
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        binding.mapview.getMapAsync(HomeFragment.this);
 
     }
-
-    @Nullable
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_day_style));
+        googleMap.moveCamera(CameraUpdateFactory.zoomTo(INITIAL_ZOOM_LEVEL));
+        googleMap.getUiSettings().setAllGesturesEnabled(true);
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setZoomGesturesEnabled(true);
+        googleMap.getUiSettings().setCompassEnabled(true);
+        //Setup the user marker with a default position
+        userPosition = googleMap.addMarker(new MarkerOptions()
+                .position(UNIVERSIDAD)
+                .icon(BitmapUtils.getBitmapDescriptor(getContext(), R.drawable.baseline_person_pin_circle_24))
+                .title("Usted esta aqui!")
+                .snippet("Y otra cosas")
+                .anchor(0.5f, 1.0f)
+                .zIndex(1.0f));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(UNIVERSIDAD));
+        //Setup the route line
+        userRoute = googleMap.addPolyline(new PolylineOptions()
+                .color(R.color.green_500)
+                .width(30.0f)
+                .geodesic(true)
+                .zIndex(0.5f));
+        //Setup the rest of the markers based in a json file
+        googleMap.setOnMapLongClickListener(latLng -> {
+            if(marker!=null){
+                marker.remove();
+            }
+            MarkerOptions markerOption = new MarkerOptions();
+            markerOption.position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Ubicación seleccionada")
+                    .snippet(latLng.toString());
+            marker = googleMap.addMarker(markerOption);
+            //dibujarRutas(userPosition.getPosition(),marker.getPosition());
+        });
+    }
+    @Override
+    public void onMapLongClick(@NonNull LatLng latLng) {
+        if(marker!=null){
+            marker.remove();
+        }
+        MarkerOptions markerOption = new MarkerOptions();
+        markerOption.position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Ubicación seleccionada")
+                .snippet(latLng.toString());
+        marker = googleMap.addMarker(markerOption);
+        //dibujarRutas(userPosition.getPosition(),marker.getPosition());
+    }
+   /* @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -170,16 +155,6 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater);
         return binding.getRoot();
     }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(callback);
-        }
-
 
 //        binding.materialButton.setOnClickListener(view1 -> findPlaces());
         /*binding.textInputLayout.getEditText().setOnEditorActionListener((textView, i, keyEvent) -> {
@@ -189,8 +164,6 @@ public class HomeFragment extends Fragment {
             }
             return false;
         });*/
-    }
-
    /* private void findPlaces(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             places.forEach(marker -> marker.remove());
@@ -213,10 +186,10 @@ public class HomeFragment extends Fragment {
         }
     }*/
 
-    @Override
+    /*@Override
     public void onStart() {
         super.onStart();
-        sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         lightSensorEventListener = new SensorEventListener() {
             @Override
@@ -277,6 +250,11 @@ public class HomeFragment extends Fragment {
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(userPosition.getPosition(), INITIAL_ZOOM_LEVEL));
         }
     }
+
+
+
+
+
 
     /*public void dibujarRutas(LatLng origen, LatLng destino){
         RequestQueue mRequestQueue = Volley.newRequestQueue(MapsFragment.this.getContext());

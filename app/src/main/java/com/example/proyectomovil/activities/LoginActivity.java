@@ -29,7 +29,7 @@ public class LoginActivity extends BasicActivity {
         setContentView(R.layout.activity_log_in);
         binding = ActivityLogInBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        FirebaseApp.initializeApp(this);
+        firebaseApp = FirebaseApp.initializeApp(this);
         progressDialog = new ProgressDialog(this);
         binding.loginButton.setOnClickListener(v -> doLogin());
         binding.signupButton.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
