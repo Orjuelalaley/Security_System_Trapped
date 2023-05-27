@@ -21,7 +21,6 @@ import lombok.Getter;
 public class GeoInfoFromJsonService {
     public static final String TAG = GeoInfoFromJsonService.class.getName();
     private final Context context;
-    @Getter
     private ArrayList<GeoInfo> geoInfoList = new ArrayList<>();
 
     @Inject

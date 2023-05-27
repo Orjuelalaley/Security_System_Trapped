@@ -166,23 +166,17 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
             binding.navView.setCheckedItem(R.id.nav_home);
        // }
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-                    switch (item.getItemId()) {
-                        case R.id.home:
-                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()    ).commit();
-                            break;
-                        case R.id.settings:
-                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
-                            break;
-                        case R.id.homeButton:
-                            showBottomDialog();
-                            break;
-                        case R.id.dispositivos:
-                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new DevicesFragment()).commit();
-                            break;
-                        case R.id.about:
-                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
-                            break;
-                    }
+            if (item.getItemId() == R.id.home) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
+            } else if (item.getItemId() == R.id.settings) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
+            } else if (item.getItemId() == R.id.homeButton) {
+                showBottomDialog();
+            } else if (item.getItemId() == R.id.dispositivos) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new DevicesFragment()).commit();
+            } else if (item.getItemId() == R.id.about) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
+            }
                     return true;
                 }
         );
@@ -203,27 +197,18 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         mBackPressed = System.currentTimeMillis();
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_home:
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
-                break;
-            case R.id.nav_settings:
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
-                break;
-            case R.id.nav_share:
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new ShareFragment()).commit();
-                break;
-            case R.id.nav_help:
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
-                break;
-            case R.id.nav_logout:
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-                break;
+        if (item.getItemId() == R.id.nav_home) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
+        } else if (item.getItemId() == R.id.nav_settings) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
+        } else if (item.getItemId() == R.id.nav_share) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new ShareFragment()).commit();
+        } else if (item.getItemId() == R.id.nav_help) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
+        } else if (item.getItemId() == R.id.nav_logout) {
+            logout();
         }
         binding.drawerLayout.closeDrawer(GravityCompat.START);
         return true;
@@ -272,6 +257,8 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
     protected void onStop() {
         super.onStop();
         locationService.stopLocation();
+        stop();
+        logout();
     }
 
 

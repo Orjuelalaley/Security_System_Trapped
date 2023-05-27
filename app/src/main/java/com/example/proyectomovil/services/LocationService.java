@@ -42,9 +42,6 @@ public class LocationService {
         return locationCallback;
     }
 
-   /* public void setLocationCallback(LocationCallback locationCallback) {
-        this.locationCallback = locationCallback;
-    }*/
 
     @Setter
     LocationCallback locationCallback;
