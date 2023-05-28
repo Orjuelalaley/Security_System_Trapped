@@ -2,9 +2,10 @@ package com.example.proyectomovil.services;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.os.Looper;
 import android.util.Log;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -41,7 +42,7 @@ public class LocationService {
     LocationCallback locationCallback;
 
     @Inject
-    public LocationService(@ApplicationContext Context context) {
+    public LocationService(@ApplicationContext Context context, FragmentActivity activity) {
         this.context = context;
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
         locationRequest = createLocationRequest();
@@ -60,11 +61,9 @@ public class LocationService {
             LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
             SettingsClient client = LocationServices.getSettingsClient(context);
             Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                task.addOnSuccessListener(context.getMainExecutor(), locationSettingsResponse -> {
-                    fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
-                });
-            }
+            task.addOnSuccessListener(context.getMainExecutor(), locationSettingsResponse -> {
+                fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+            });
         } else {
             Log.e(TAG, "startLocation() returned: locationCallback is null, please define it first.");
         }

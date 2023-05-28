@@ -83,7 +83,7 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorTemp = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
-        sensorEventListener = new SensorEventListener() {
+        /*sensorEventListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
                 if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
@@ -104,16 +104,8 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
                     }else if(temp < 0){
                         Toast.makeText(MainActivity.this, "¡Cuidado! La temperatura es muy baja", Toast.LENGTH_SHORT).show();
                     }
-                }*/
-            }
-
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-            }
-
-
+                }
+            }*/
         };
 
        /*
@@ -132,35 +124,14 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         });*/
 
 
-
-
-        start();
-
-    }
-
     @Override
     public void onStart() {
         super.onStart();
-        //if (savedInstanceState == null) {
-            locationService.setLocationCallback(new LocationCallback() {
-                @Override
-                public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
-                    super.onLocationAvailability(locationAvailability);
-                }
-
-                @Override
-                public void onLocationResult(@NonNull LocationResult locationResult) {
-                    super.onLocationResult(locationResult);
-                }
-            });
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
-            binding.navView.setCheckedItem(R.id.nav_home);
-       // }
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.home) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
             } else if (item.getItemId() == R.id.settings) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new Setting()).commit();
             } else if (item.getItemId() == R.id.homeButton) {
                 showBottomDialog();
             } else if (item.getItemId() == R.id.dispositivos) {
@@ -168,14 +139,14 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
             } else if (item.getItemId() == R.id.about) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
             }
-                    return true;
-                }
-        );
-        permissionService.getLocationPermission(this);
-        if (permissionService.isMLocationPermissionGranted()) {
-            locationService.startLocation();
-        }
+            return true;
+        });
+
+        // Cargar el HomeFragment al iniciar la aplicación
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
+        binding.bottomNavigationView.setSelectedItemId(R.id.home);
     }
+
 
     @Override
     public void onBackPressed() {
@@ -193,10 +164,8 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         if (item.getItemId() == R.id.nav_home) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
         } else if (item.getItemId() == R.id.nav_settings) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
-        } else if (item.getItemId() == R.id.nav_share) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new ShareFragment()).commit();
-        } else if (item.getItemId() == R.id.nav_help) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new Setting()).commit();
+        }else if (item.getItemId() == R.id.nav_help) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
         } else if (item.getItemId() == R.id.nav_logout) {
             logout();
@@ -211,7 +180,6 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
-
 
     private void showBottomDialog() {
 
@@ -249,7 +217,6 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         super.onStop();
         locationService.stopLocation();
         stop();
-        logout();
     }
 
 
