@@ -2,10 +2,10 @@ package com.example.proyectomovil.activities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,33 +13,32 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import com.example.proyectomovil.R;
 import com.example.proyectomovil.databinding.FragmentHomeBinding;
 import com.example.proyectomovil.services.GeoInfoFromJsonService;
 import com.example.proyectomovil.services.GeocoderService;
 import com.example.proyectomovil.services.LocationService;
-import com.example.proyectomovil.utils.BitmapUtils;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.Marker;
+
+import java.util.Scanner;
 
 import javax.inject.Inject;
 
 
 public class HomeFragment extends Fragment {
 
+    private FusedLocationProviderClient fusedLocationClient;
     @Inject
     GeoInfoFromJsonService geoInfoFromJsonService;
 
@@ -51,9 +50,11 @@ public class HomeFragment extends Fragment {
 
     public FragmentHomeBinding binding;
 
+    private LocationRequest locationRequest;
+
     private Marker marker;
 
-    static final int INITIAL_ZOOM_LEVEL = 18;
+    static final Double INITIAL_ZOOM_LEVEL = 14.0;
 
     private final LatLng UNIVERSIDAD = new LatLng(4.628150, -74.064227);
 
@@ -73,8 +74,55 @@ public class HomeFragment extends Fragment {
         Context context = view.getContext();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         Configuration.getInstance().load(context, preferences);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
         binding.map.setTileSource(TileSourceFactory.MAPNIK);
         binding.map.setMultiTouchControls(true);
+        binding.map.getController().setZoom(INITIAL_ZOOM_LEVEL);
+        locationRequest = createLocationRequest();
+    }
+
+    private LocationRequest createLocationRequest() {
+        return LocationRequest.create()
+                .setInterval(10000)
+                .setFastestInterval(5000)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    private void readJson() {
+        Scanner sc = new Scanner(getResources().openRawResource(R.raw.locations));
+        StringBuilder builder = new StringBuilder();
+        while (sc.hasNextLine())
+            builder.append(sc.nextLine());
+        parseJson(builder.toString());
+    }
+
+    private Marker createMarker(GeoPoint p, String title, int iconID) {
+        org.osmdroid.views.overlay.Marker marker = null;
+        marker = new org.osmdroid.views.overlay.Marker(binding.map);
+        if (title != null) marker.setTitle(title);
+        marker.setSubDescription("");
+        marker.setPosition(p);
+        marker.setAnchor(org.osmdroid.views.overlay.Marker.ANCHOR_CENTER, org.osmdroid.views.overlay.Marker.ANCHOR_BOTTOM);
+        return marker;
+    }
+    private void placeMarker(org.osmdroid.views.overlay.Marker marker) {
+        binding.map.getOverlays().add(marker);
+    }
+
+    private void parseJson(String json) {
+        try {
+            JSONObject root = new JSONObject(json);
+            JSONArray locations = root.getJSONArray("locationsArray");
+            for (int i = 0; i < locations.length(); i++) {
+                org.osmdroid.views.overlay.Marker marker = createMarker(new GeoPoint(Double.parseDouble(locations.getJSONObject(i).getString("latitude")),
+                                Double.parseDouble(locations.getJSONObject(i).getString("longitude"))),
+                        locations.getJSONObject(i).getString("name"),
+                        R.drawable.ic_marker_red);
+                placeMarker(marker);
+            }
+        } catch (Exception e) {
+            Log.e("ERROR", "There was an error");
+        }
     }
 
 
