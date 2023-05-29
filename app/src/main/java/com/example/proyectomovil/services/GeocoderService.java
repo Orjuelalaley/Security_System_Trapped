@@ -24,12 +24,10 @@ public class GeocoderService {
 
     private static final int MAX_RESULTS = 20;
     private static final double DISTANCE_RADIUS_KM = 20.0d;
-    private final Context context;
     private final Geocoder geocoder;
 
     @Inject
     public GeocoderService(@ApplicationContext Context context) {
-        this.context = context;
         this.geocoder = new Geocoder(context);
     }
 

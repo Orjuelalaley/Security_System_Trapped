@@ -14,7 +14,7 @@
         android:layout_height="61dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/green_800"
+        android:backgroundTint="@color/green_800"
         android:drawableStart="@drawable/camera_icon"
         android:drawableTint="@color/white_1000"
         android:paddingStart="20dp"

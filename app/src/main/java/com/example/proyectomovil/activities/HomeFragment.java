@@ -1,11 +1,11 @@
 package com.example.proyectomovil.activities;
 
 import android.content.Context;
-
-
+import android.content.SharedPreferences;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +23,7 @@ import com.example.proyectomovil.services.LocationService;
 import com.example.proyectomovil.utils.BitmapUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -31,10 +32,13 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+
 import javax.inject.Inject;
 
 
-public class HomeFragment extends Fragment  implements OnMapReadyCallback {
+public class HomeFragment extends Fragment {
 
     @Inject
     GeoInfoFromJsonService geoInfoFromJsonService;
@@ -47,9 +51,8 @@ public class HomeFragment extends Fragment  implements OnMapReadyCallback {
 
     public FragmentHomeBinding binding;
 
-    GoogleMap mMap;
-
     private Marker marker;
+
     static final int INITIAL_ZOOM_LEVEL = 18;
 
     private final LatLng UNIVERSIDAD = new LatLng(4.628150, -74.064227);
@@ -59,7 +62,6 @@ public class HomeFragment extends Fragment  implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
     }
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -68,47 +70,47 @@ public class HomeFragment extends Fragment  implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapview);
-        if (mapFragment == null) {
-            mapFragment = SupportMapFragment.newInstance();
-            getChildFragmentManager().beginTransaction().replace(R.id.mapview, mapFragment).commit();
-        }
-        mapFragment.getMapAsync(this);
+        Context context = view.getContext();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Configuration.getInstance().load(context, preferences);
+        binding.map.setTileSource(TileSourceFactory.MAPNIK);
+        binding.map.setMultiTouchControls(true);
     }
 
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        mMap = googleMap;
 
-        // Configurar opciones del mapa
-        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.getUiSettings().setCompassEnabled(true);
-        googleMap.moveCamera(CameraUpdateFactory.zoomTo(INITIAL_ZOOM_LEVEL));
-        googleMap.getUiSettings().setAllGesturesEnabled(true);
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.getUiSettings().setZoomGesturesEnabled(true);
-        googleMap.getUiSettings().setCompassEnabled(true);
-        googleMap.getUiSettings().isMyLocationButtonEnabled();
-        // Mover y marcar una ubicación en el mapa
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UNIVERSIDAD, INITIAL_ZOOM_LEVEL));
-        mMap.addMarker(new MarkerOptions().position(UNIVERSIDAD)
-                .icon(BitmapUtils.getBitmapDescriptor(getContext(), R.drawable.baseline_person_pin_circle_24))
-                .title("Universidad")
-                .anchor(0.5f, 1.0f)
-                .zIndex(1.0f));
-        googleMap.setOnMapLongClickListener(latLng -> {
-            if (marker != null) {
-                marker.remove();
-            }
-            MarkerOptions markerOption = new MarkerOptions();
-            markerOption.position(latLng)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Ubicación seleccionada")
-                    .snippet(latLng.toString());
-            marker = googleMap.addMarker(markerOption);
-            //dibujarRutas(userPosition.getPosition(),marker.getPosition());
-        });
-    }
+//    @Override
+//    public void onMapReady(@NonNull GoogleMap googleMap) {
+//        mMap = googleMap;
+//
+//        // Configurar opciones del mapa
+//        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+//        googleMap.getUiSettings().setZoomControlsEnabled(true);
+//        googleMap.getUiSettings().setCompassEnabled(true);
+//        googleMap.moveCamera(CameraUpdateFactory.zoomTo(INITIAL_ZOOM_LEVEL));
+//        googleMap.getUiSettings().setAllGesturesEnabled(true);
+//        googleMap.getUiSettings().setZoomControlsEnabled(true);
+//        googleMap.getUiSettings().setZoomGesturesEnabled(true);
+//        googleMap.getUiSettings().setCompassEnabled(true);
+//        googleMap.getUiSettings().isMyLocationButtonEnabled();
+//        // Mover y marcar una ubicación en el mapa
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UNIVERSIDAD, INITIAL_ZOOM_LEVEL));
+//        mMap.addMarker(new MarkerOptions().position(UNIVERSIDAD)
+//                .icon(BitmapUtils.getBitmapDescriptor(getContext(), R.drawable.baseline_person_pin_circle_24))
+//                .title("Universidad")
+//                .anchor(0.5f, 1.0f)
+//                .zIndex(1.0f));
+//        googleMap.setOnMapLongClickListener(latLng -> {
+//            if (marker != null) {
+//                marker.remove();
+//            }
+//            MarkerOptions markerOption = new MarkerOptions();
+//            markerOption.position(latLng)
+//                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Ubicación seleccionada")
+//                    .snippet(latLng.toString());
+//            marker = googleMap.addMarker(markerOption);
+//            //dibujarRutas(userPosition.getPosition(),marker.getPosition());
+//        });
+//    }
 
 //    private void showCurrentLocation() {
 //         Verificar si el permiso de ubicación está concedido

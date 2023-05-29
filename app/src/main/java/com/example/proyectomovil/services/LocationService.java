@@ -71,8 +71,6 @@ public class LocationService {
 
     public void stopLocation() {
         Log.d(TAG, "stopLocation: Stopping location updates.");
-        if (fusedLocationProviderClient != null)
-            fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
     public void setLocationCallback(LocationCallback locationCallback) {

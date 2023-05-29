@@ -37,9 +37,6 @@
         android:theme="@style/Theme.ProyectoMovil"
         tools:targetApi="tiramisu">
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyA6cAJOsBgDyuLW14Hrh0JsXXbS8tUuMTU" />
         <activity
             android:name=".activities.RegisterActivity"
             android:exported="false" />
