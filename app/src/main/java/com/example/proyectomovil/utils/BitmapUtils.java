@@ -14,6 +14,7 @@ public class BitmapUtils {
 
     public static BitmapDescriptor getBitmapDescriptor(Context ctx, int id) {
         Drawable vectorDrawable = ContextCompat.getDrawable(ctx, id);
+        assert vectorDrawable != null;
         int h = vectorDrawable.getIntrinsicHeight();
         int w = vectorDrawable.getIntrinsicWidth();
         vectorDrawable.setBounds(0, 0, w, h);
