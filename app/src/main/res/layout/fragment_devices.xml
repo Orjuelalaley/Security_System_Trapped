@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".activities.DevicesFragment">
+    tools:context=".activities.DevicesActivity">
 
-    <Button
-        android:id="@+id/button_camara_sala_"
-        android:layout_width="341dp"
-        android:layout_height="61dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="@color/green_800"
-        android:drawableStart="@drawable/camera_icon"
-        android:drawableTint="@color/white_1000"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:text="@string/camara_room"
-
-        android:textAlignment="center"
-        android:textColor="#FFFFFF" />
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:lottie_rawRes="@raw/sensor" />
 
     <Switch
         android:id="@+id/sensor_movimiento_sala_switch"
@@ -39,5 +29,52 @@
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <Switch
+        android:id="@+id/sensor_movimiento_sala_switch2"
+        android:layout_width="341dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/rounded_switch"
+        android:drawableStart="@drawable/sensor_icon"
+        android:drawableTint="@color/white_1000"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="Sensor de movimiento patio"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <Switch
+        android:id="@+id/sensor_movimiento_sala_switch3"
+        android:layout_width="341dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/rounded_switch"
+        android:drawableStart="@drawable/sensor_icon"
+        android:drawableTint="@color/white_1000"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="Sensor de movimiento casa"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <Button
+        android:id="@+id/button_camara_sala"
+        android:layout_width="341dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/green_800"
+        android:drawableStart="@drawable/camera_icon"
+        android:drawableTint="@color/white_1000"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/camara_room"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF" />
 
 </LinearLayout>

@@ -24,6 +24,7 @@
         android:maxSdkVersion="32"
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -37,6 +38,7 @@
         android:theme="@style/Theme.ProyectoMovil"
         tools:targetApi="tiramisu">
 
+
         <activity
             android:name=".activities.RegisterActivity"
             android:exported="false" />
@@ -46,9 +48,12 @@
         <activity
             android:name=".activities.CamaraHabitacionActivity"
             android:exported="false" />
+        <activity android:name=".activities.DevicesActivity" />
+        <activity android:name=".activities.EmergenciaActivity" />
+
         <activity
             android:name=".activities.AddDeviceActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true"
@@ -74,5 +79,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
     </application>
 </manifest>

@@ -1,6 +1,7 @@
 package com.example.proyectomovil.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
@@ -68,6 +70,7 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -79,7 +82,37 @@ public class HomeFragment extends Fragment {
         binding.map.setMultiTouchControls(true);
         binding.map.getController().setZoom(INITIAL_ZOOM_LEVEL);
         locationRequest = createLocationRequest();
+
+        // CardView de Dispositivos
+        CardView dispositivosCardView = view.findViewById(R.id.dispositivosCardView);
+        dispositivosCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Iniciar la actividad de Dispositivos
+                startActivity(new Intent(getContext(), DevicesActivity.class));
+            }
+        });
+
+        // CardView de Habitación
+        CardView habitacionCardView = view.findViewById(R.id.habitacionCardView);
+        habitacionCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navegar hacia la actividad de Habitación
+                startActivity(new Intent(getContext(), CamaraHabitacionActivity.class));
+            }
+        });
+        // CardView de Habitación
+        CardView emergenciaCardView = view.findViewById(R.id.emergenciaCardView);
+        emergenciaCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Navegar hacia la actividad de Habitación
+                startActivity(new Intent(getContext(), EmergenciaActivity.class));
+            }
+        });
     }
+
 
     private LocationRequest createLocationRequest() {
         return LocationRequest.create()
@@ -105,6 +138,7 @@ public class HomeFragment extends Fragment {
         marker.setAnchor(org.osmdroid.views.overlay.Marker.ANCHOR_CENTER, org.osmdroid.views.overlay.Marker.ANCHOR_BOTTOM);
         return marker;
     }
+
     private void placeMarker(org.osmdroid.views.overlay.Marker marker) {
         binding.map.getOverlays().add(marker);
     }
@@ -124,6 +158,10 @@ public class HomeFragment extends Fragment {
             Log.e("ERROR", "There was an error");
         }
     }
+
+
+
+
 
 
 //    @Override
@@ -186,7 +224,7 @@ public class HomeFragment extends Fragment {
 //                .width(30.0f)
 //                .geodesic(true)
 //                .zIndex(0.5f));
-     //   Setup the rest of the markers based in a json file
+    //   Setup the rest of the markers based in a json file
 //        googleMap.setOnMapLongClickListener(latLng -> {
 //            if (marker != null) {
 //                marker.remove();

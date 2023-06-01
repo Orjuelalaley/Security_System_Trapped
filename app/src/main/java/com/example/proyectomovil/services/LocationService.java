@@ -69,10 +69,6 @@ public class LocationService {
         }
     }
 
-    public void stopLocation() {
-        Log.d(TAG, "stopLocation: Stopping location updates.");
-    }
-
     public void setLocationCallback(LocationCallback locationCallback) {
         this.locationCallback = locationCallback;
     }

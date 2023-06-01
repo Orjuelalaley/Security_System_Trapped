@@ -106,7 +106,7 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
                     }
                 }
             }*/
-        };
+    };
 
        /*
         locationService.setLocationCallback(new LocationCallback() {
@@ -134,8 +134,6 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new Setting()).commit();
             } else if (item.getItemId() == R.id.homeButton) {
                 showBottomDialog();
-            } else if (item.getItemId() == R.id.dispositivos) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new DevicesFragment()).commit();
             } else if (item.getItemId() == R.id.about) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
             }
@@ -215,7 +213,6 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
     @Override
     protected void onStop() {
         super.onStop();
-        locationService.stopLocation();
         stop();
     }
 

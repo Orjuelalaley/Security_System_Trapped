@@ -49,5 +49,11 @@
     <string name="camara_room">Cámara Sala</string>
     <string name="movement_sensor">Sensor de movimiento sala</string>
     <string name="fix_position_label">Seguir al usuario\n</string>
+    <string name="emergencia">Emergencia</string>
+    <string name="en_caso_de_una_emergencia_utiliza_esta_funci_n_para_alertar_a_las_personas_cercanas">En caso de una emergencia, utiliza esta función para alertar a las personas cercanas.</string>
+    <string name="accede_a_las_c_maras_de_tu_hogar_para_vigilar_tus_espacios_y_garantizar_la_seguridad">Accede a las cámaras de tu hogar para vigilar tus espacios y garantizar la seguridad.</string>
+    <string name="habitaci_n">Habitación</string>
+    <string name="dispositivos">Dispositivos</string>
+    <string name="consulta_tus_dispositivos_actuales_y_controla_su_funcionamiento_desde_aqu">Consulta tus dispositivos actuales y controla su funcionamiento desde aquí.</string>
 
 </resources>
