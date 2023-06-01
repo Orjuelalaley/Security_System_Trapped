@@ -1,9 +1,21 @@
 package com.example.proyectomovil.activities;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +25,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 
@@ -20,49 +33,56 @@ import com.example.proyectomovil.R;
 import com.example.proyectomovil.databinding.FragmentHomeBinding;
 import com.example.proyectomovil.services.GeoInfoFromJsonService;
 import com.example.proyectomovil.services.GeocoderService;
-import com.example.proyectomovil.services.LocationService;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.TilesOverlay;
 
 import java.util.Scanner;
 
 import javax.inject.Inject;
 
 
-public class HomeFragment extends Fragment {
-
-    private FusedLocationProviderClient fusedLocationClient;
+public class HomeFragment extends Fragment implements SensorEventListener, MapEventsReceiver{
     @Inject
     GeoInfoFromJsonService geoInfoFromJsonService;
-
     @Inject
     GeocoderService geocoderService;
 
-    @Inject
-    LocationService locationService;
+    Double currentUserLatitude = 0d, currentUserLongitude = 0d;
 
     public FragmentHomeBinding binding;
 
-    private LocationRequest locationRequest;
-
     private Marker marker;
 
-    static final Double INITIAL_ZOOM_LEVEL = 14.0;
+    static final Double INITIAL_ZOOM_LEVEL = 18.0;
 
     private final LatLng UNIVERSIDAD = new LatLng(4.628150, -74.064227);
 
+    private SensorManager sensorManager;
+    private Sensor lightSensor;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -77,55 +97,77 @@ public class HomeFragment extends Fragment {
         Context context = view.getContext();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         Configuration.getInstance().load(context, preferences);
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
+        readJson();
         binding.map.setTileSource(TileSourceFactory.MAPNIK);
         binding.map.setMultiTouchControls(true);
         binding.map.getController().setZoom(INITIAL_ZOOM_LEVEL);
-        locationRequest = createLocationRequest();
+        IMapController mapController = binding.map.getController();
+        // Obtén el proveedor de ubicación actual
 
+        LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String provider = locationManager.getBestProvider(criteria, false);
+        // Verifica si tienes permiso para acceder a la ubicación
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // Obtiene la última ubicación conocida
+            Location lastKnownLocation = locationManager.getLastKnownLocation(provider);
+            if (lastKnownLocation != null) {
+                // Mueve el centro del mapa a tu ubicación actual
+                GeoPoint startPoint = new GeoPoint(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                binding.map.getController().setCenter(startPoint);
+                // Crea un marcador en tu ubicación actual
+               AddMarker(startPoint , "Ubicación actual");
+            } else {
+                // Mueve el centro del mapa a la Universidad
+                GeoPoint startPoint = new GeoPoint(UNIVERSIDAD.latitude, UNIVERSIDAD.longitude);
+                binding.map.getController().setCenter(startPoint);
+                // Crea un marcador en la Universidad
+                AddMarker(startPoint, "Universidad");
+            }
+        }
         // CardView de Dispositivos
-        CardView dispositivosCardView = view.findViewById(R.id.dispositivosCardView);
-        dispositivosCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Iniciar la actividad de Dispositivos
-                startActivity(new Intent(getContext(), DevicesActivity.class));
-            }
+        binding.dispositivosCardView.setOnClickListener(v -> {
+            // Iniciar la actividad de Dispositivos
+            startActivity(new Intent(getContext(), DevicesActivity.class));
         });
 
         // CardView de Habitación
-        CardView habitacionCardView = view.findViewById(R.id.habitacionCardView);
-        habitacionCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Navegar hacia la actividad de Habitación
-                startActivity(new Intent(getContext(), CamaraHabitacionActivity.class));
-            }
+        binding.habitacionCardView.setOnClickListener(v -> {
+            // Navegar hacia la actividad de Habitación
+            startActivity(new Intent(getContext(), CamaraHabitacionActivity.class));
         });
         // CardView de Habitación
-        CardView emergenciaCardView = view.findViewById(R.id.emergenciaCardView);
-        emergenciaCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Navegar hacia la actividad de Habitación
-                startActivity(new Intent(getContext(), EmergenciaActivity.class));
-            }
+        binding.emergenciaCardView.setOnClickListener(v -> {
+            // Navegar hacia la actividad de Habitación
+            startActivity(new Intent(getContext(), EmergenciaActivity.class));
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
 
-    private LocationRequest createLocationRequest() {
-        return LocationRequest.create()
-                .setInterval(10000)
-                .setFastestInterval(5000)
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    @Override
+    public void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private void AddMarker(GeoPoint startPoint, String title) {
+        Marker marker = new Marker(binding.map);
+        marker.setPosition(startPoint);
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        marker.setTitle(title);
+        marker.setIcon(getResources().getDrawable(R.drawable.ic_marker_blue));
+        binding.map.getOverlays().add(marker);
     }
 
     private void readJson() {
         Scanner sc = new Scanner(getResources().openRawResource(R.raw.locations));
         StringBuilder builder = new StringBuilder();
-        while (sc.hasNextLine())
-            builder.append(sc.nextLine());
+        while (sc.hasNextLine()) builder.append(sc.nextLine());
         parseJson(builder.toString());
     }
 
@@ -135,11 +177,12 @@ public class HomeFragment extends Fragment {
         if (title != null) marker.setTitle(title);
         marker.setSubDescription("");
         marker.setPosition(p);
-        marker.setAnchor(org.osmdroid.views.overlay.Marker.ANCHOR_CENTER, org.osmdroid.views.overlay.Marker.ANCHOR_BOTTOM);
+        marker.setIcon(getResources().getDrawable(iconID));
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         return marker;
     }
 
-    private void placeMarker(org.osmdroid.views.overlay.Marker marker) {
+    private void placeMarker(Marker marker) {
         binding.map.getOverlays().add(marker);
     }
 
@@ -148,10 +191,7 @@ public class HomeFragment extends Fragment {
             JSONObject root = new JSONObject(json);
             JSONArray locations = root.getJSONArray("locationsArray");
             for (int i = 0; i < locations.length(); i++) {
-                org.osmdroid.views.overlay.Marker marker = createMarker(new GeoPoint(Double.parseDouble(locations.getJSONObject(i).getString("latitude")),
-                                Double.parseDouble(locations.getJSONObject(i).getString("longitude"))),
-                        locations.getJSONObject(i).getString("name"),
-                        R.drawable.ic_marker_red);
+                Marker marker = createMarker(new GeoPoint(Double.parseDouble(locations.getJSONObject(i).getString("latitude")), Double.parseDouble(locations.getJSONObject(i).getString("longitude"))), locations.getJSONObject(i).getString("name"), R.drawable.ic_marker_red);
                 placeMarker(marker);
             }
         } catch (Exception e) {
@@ -159,134 +199,33 @@ public class HomeFragment extends Fragment {
         }
     }
 
-
-
-
-
-
-//    @Override
-//    public void onMapReady(@NonNull GoogleMap googleMap) {
-//        mMap = googleMap;
-//
-//        // Configurar opciones del mapa
-//        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-//        googleMap.getUiSettings().setZoomControlsEnabled(true);
-//        googleMap.getUiSettings().setCompassEnabled(true);
-//        googleMap.moveCamera(CameraUpdateFactory.zoomTo(INITIAL_ZOOM_LEVEL));
-//        googleMap.getUiSettings().setAllGesturesEnabled(true);
-//        googleMap.getUiSettings().setZoomControlsEnabled(true);
-//        googleMap.getUiSettings().setZoomGesturesEnabled(true);
-//        googleMap.getUiSettings().setCompassEnabled(true);
-//        googleMap.getUiSettings().isMyLocationButtonEnabled();
-//        // Mover y marcar una ubicación en el mapa
-//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(UNIVERSIDAD, INITIAL_ZOOM_LEVEL));
-//        mMap.addMarker(new MarkerOptions().position(UNIVERSIDAD)
-//                .icon(BitmapUtils.getBitmapDescriptor(getContext(), R.drawable.baseline_person_pin_circle_24))
-//                .title("Universidad")
-//                .anchor(0.5f, 1.0f)
-//                .zIndex(1.0f));
-//        googleMap.setOnMapLongClickListener(latLng -> {
-//            if (marker != null) {
-//                marker.remove();
-//            }
-//            MarkerOptions markerOption = new MarkerOptions();
-//            markerOption.position(latLng)
-//                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Ubicación seleccionada")
-//                    .snippet(latLng.toString());
-//            marker = googleMap.addMarker(markerOption);
-//            //dibujarRutas(userPosition.getPosition(),marker.getPosition());
-//        });
-//    }
-
-//    private void showCurrentLocation() {
-//         Verificar si el permiso de ubicación está concedido
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
-//             Se tiene permiso, obtener la ubicación actual
-//            LocationListener locationListener = location -> {
-//                 Aquí se recibe la ubicación actual
-//                double latitude = location.getLatitude();
-//                double longitude = location.getLongitude();
-//                 Utiliza la latitud y longitud como desees
-//                Log.d("Location", "Latitude: " + latitude + ", Longitude: " + longitude);
-//            };
-//             Actualizar la ubicación cada cierto tiempo y distancia
-//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0L, (float) 0, (android.location.LocationListener) locationListener);
-//        } else {
-//             El permiso de ubicación no está concedido, solicitarlo al usuario
-//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION}, new );
-//        }
-//    }
-//
-//    @Override
-//    public void onMapReady(@NonNull GoogleMap googleMap) {
-//        userRoute = googleMap.addPolyline(new PolylineOptions()
-//                .color(R.color.green_500)
-//                .width(30.0f)
-//                .geodesic(true)
-//                .zIndex(0.5f));
-    //   Setup the rest of the markers based in a json file
-//        googleMap.setOnMapLongClickListener(latLng -> {
-//            if (marker != null) {
-//                marker.remove();
-//            }
-//            MarkerOptions markerOption = new MarkerOptions();
-//            markerOption.position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Ubicación seleccionada")
-//                    .snippet(latLng.toString());
-//            marker = googleMap.addMarker(markerOption);
-//            dibujarRutas(userPosition.getPosition(),marker.getPosition());
-//        });
-//    }
-//
-//    @Override
-//    public void onMapLongClick(@NonNull LatLng latLng) {
-//        if (marker != null) {
-//            marker.remove();
-//        }
-//        MarkerOptions markerOption = new MarkerOptions();
-//        markerOption.position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Ubicación seleccionada")
-//                .snippet(latLng.toString());
-//        marker = googleMap.addMarker(markerOption);
-//        dibujarRutas(userPosition.getPosition(),marker.getPosition());
-//    }
-   /* @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-//        binding = FragmentHomeBinding.inflate(inflater);
-//        return binding.getRoot();
-//    }
-//
-        binding.materialButton.setOnClickListener(view1 -> findPlaces());
-//        /*binding.textInputLayout.getEditText().setOnEditorActionListener((textView, i, keyEvent) -> {
-//            if(i == EditorInfo.IME_ACTION_SEARCH){
-//                findPlaces();
-//                return true;
-//            }
-//            return false;
-//        });*/
-//   /* private void findPlaces(){
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//            places.forEach(marker -> marker.remove());
-//            places.clear();
-//            try {
-//                geocoderService.finPlacesByNameInRadius(binding.textInputLayout.getEditText().getText().toString(), userPosition.getPosition()).forEach(address -> {
-//                    Marker tmp = googleMap.addMarker(new MarkerOptions()
-//                            .title(address.getFeatureName())
-//                            .snippet(address.getAddressLine(0))
-//                            .position(new LatLng(address.getLatitude(), address.getLongitude())));
-//                    places.add(tmp);
-//
-//                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(places.get(0).getPosition()));
-//                });
-//
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }*/
-//
+    public void onSensorChanged(SensorEvent event) {
+        float lightLevel = event.values[0];
+        if (event.values[0] < 3) {
+            binding.map.getOverlayManager().getTilesOverlay().setColorFilter(TilesOverlay.INVERT_COLORS);
+        } else {
+            binding.map.getOverlayManager().getTilesOverlay().setColorFilter(null);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    @Override
+    public boolean singleTapConfirmedHelper(GeoPoint p) {
+        return false;
+    }
+
+    @Override
+    public boolean longPressHelper(GeoPoint p) {
+        Marker marker = createMarker(p, "Ubicación Seleccionada", R.drawable.ic_marker_red);
+        placeMarker(marker);
+        return true;
+    }
+
+
 //    /*@Override
 //    public void onStart() {
 //        super.onStart();

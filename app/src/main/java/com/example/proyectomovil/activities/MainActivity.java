@@ -3,42 +3,27 @@ package com.example.proyectomovil.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.Window;
 
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.proyectomovil.R;
 import com.example.proyectomovil.databinding.ActivityMainBinding;
-import com.example.proyectomovil.services.LocationService;
 import com.example.proyectomovil.services.PermissionService;
-import com.google.android.gms.location.LocationAvailability;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -55,16 +40,13 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
     private static final int TIME_INTERVAL = 2000; // Intervalo de tiempo entre pulsaciones en milisegundos
     private long mBackPressed;
 
+
     SensorManager sensorManager;
     Sensor sensor;
     Sensor sensorTemp;
     SensorEventListener sensorEventListener;
     @Inject
     PermissionService permissionService;
-
-    @Inject
-    LocationService locationService;
-
 
 
     @Override
@@ -145,7 +127,6 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         binding.bottomNavigationView.setSelectedItemId(R.id.home);
     }
 
-
     @Override
     public void onBackPressed() {
         if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis()) {
@@ -223,7 +204,6 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         if (requestCode == PermissionService.PERMISSIONS_REQUEST_LOCATION) {
             permissionService.getLocationPermission(this);
             if (permissionService.isMLocationPermissionGranted()) {
-                locationService.startLocation();
             }
         }
     }
