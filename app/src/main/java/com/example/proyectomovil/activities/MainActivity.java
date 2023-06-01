@@ -3,16 +3,23 @@ package com.example.proyectomovil.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -33,20 +40,19 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 
 @AndroidEntryPoint
-public class MainActivity extends BasicActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BasicActivity implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
 
     private ActivityMainBinding binding;
     FirebaseAuth auth = FirebaseAuth.getInstance();
     private static final int TIME_INTERVAL = 2000; // Intervalo de tiempo entre pulsaciones en milisegundos
     private long mBackPressed;
-
-
     SensorManager sensorManager;
-    Sensor sensor;
-    Sensor sensorTemp;
     SensorEventListener sensorEventListener;
+
     @Inject
     PermissionService permissionService;
+
+    private Toast currentToast;
 
 
     @Override
@@ -63,48 +69,27 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorTemp = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
-        /*sensorEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent event) {
-                if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-                    float x = event.values[0]; // Valor del eje x
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+    }
 
-                    if(x < -5){
-                        Toast.makeText(MainActivity.this, "¡Llamando a la policia!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:3005609505"));
-                        if(ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED){
-                            return;
-                        }
-                        startActivity(intent);
-                    }
-                }/*else if(event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE){
-                    float temp = event.values[0];
-                    if(temp > 30){
-                        Toast.makeText(MainActivity.this, "¡Cuidado! La temperatura es muy alta", Toast.LENGTH_SHORT).show();
-                    }else if(temp < 0){
-                        Toast.makeText(MainActivity.this, "¡Cuidado! La temperatura es muy baja", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }*/
-    };
-
-       /*
-        locationService.setLocationCallback(new LocationCallback() {
-            @Override
-            public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
-                super.onLocationAvailability(locationAvailability);
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
+            float x = event.values[0];
+            if (x<-10){
+                currentToast = Toast.makeText(this, "Llamando a emergencias", Toast.LENGTH_SHORT);
+                currentToast.show();
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:911"));
+                startActivity(intent);
             }
+        }
+    }
 
-            @Override
-            public void onLocationResult(@NonNull LocationResult locationResult) {
-                super.onLocationResult(locationResult);
-                HomeFragment fragment = ((HomeFragment) binding.frameLayout).binding.map.getFragment();
-                fragment.updateUserPositionOnMap(locationResult);
-            }
-        });*/
-
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // No es necesario implementar esto en este caso
+    }
 
     @Override
     public void onStart() {
@@ -144,7 +129,7 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
         } else if (item.getItemId() == R.id.nav_settings) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new Setting()).commit();
-        }else if (item.getItemId() == R.id.nav_help) {
+        } else if (item.getItemId() == R.id.nav_help) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
         } else if (item.getItemId() == R.id.nav_logout) {
             logout();
@@ -158,6 +143,7 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        finishAffinity();
     }
 
     private void showBottomDialog() {
@@ -191,29 +177,23 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setGravity(Gravity.BOTTOM);
     }
+
     @Override
     protected void onStop() {
         super.onStop();
         stop();
+        currentToast.cancel();
     }
-
 
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PermissionService.PERMISSIONS_REQUEST_LOCATION) {
             permissionService.getLocationPermission(this);
-            if (permissionService.isMLocationPermissionGranted()) {
-            }
         }
     }
 
-    private void start(){
-        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(sensorEventListener, sensorTemp, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    private void stop(){
+    private void stop() {
         sensorManager.unregisterListener(sensorEventListener);
     }
 }
