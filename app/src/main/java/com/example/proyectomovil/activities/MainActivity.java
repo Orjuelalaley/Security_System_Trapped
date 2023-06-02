@@ -33,6 +33,11 @@ import com.example.proyectomovil.databinding.ActivityMainBinding;
 import com.example.proyectomovil.services.PermissionService;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import javax.inject.Inject;
 
@@ -53,6 +58,10 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
     PermissionService permissionService;
 
     private Toast currentToast;
+    private DatabaseReference sensorReference;
+    private ValueEventListener sensorValueEventListener;
+
+
 
 
     @Override
@@ -70,6 +79,8 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         toggle.syncState();
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        sensorReference = FirebaseDatabase.getInstance().getReference().child("Sensores").child("estado");
+
     }
 
     @Override
@@ -105,11 +116,31 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
             }
             return true;
+
         });
 
         // Cargar el HomeFragment al iniciar la aplicación
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
         binding.bottomNavigationView.setSelectedItemId(R.id.home);
+
+        sensorValueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Integer estado = snapshot.getValue(Integer.class);
+
+                if (estado != null && estado == 1) {
+                    currentToast = Toast.makeText(MainActivity.this, "¡Se detectó movimiento!", Toast.LENGTH_SHORT);
+                    currentToast.show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+
+        sensorReference.addValueEventListener(sensorValueEventListener);
     }
 
     @Override
