@@ -50,7 +50,6 @@ public class CamaraSalaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = CamaraSalaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         binding.video.setVisibility(View.VISIBLE);
         binding.buttonTake.setOnClickListener(view -> {
             if(requestPermission(CamaraSalaActivity.this, new String[]{camaraPerm,storageWritePerm}, CAMERA_VIDEO_PERMISSION_ID)){

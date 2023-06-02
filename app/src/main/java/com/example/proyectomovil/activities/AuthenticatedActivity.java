@@ -29,7 +29,7 @@ public class AuthenticatedActivity extends BasicActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.nav_settings){
-            startActivity(new Intent(this, ProfileActivity.class));
+            startActivity(new Intent(this, Setting.class));
         } else if(item.getItemId() == R.id.nav_logout){
             logout();
         }

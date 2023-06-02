@@ -13,20 +13,15 @@ import dagger.Module;
 import dagger.hilt.InstallIn;
 import dagger.hilt.android.components.ActivityComponent;
 import dagger.hilt.android.qualifiers.ApplicationContext;
-import lombok.Getter;
 
-@Getter
 @Module
 @InstallIn(ActivityComponent.class)
 public class GeoInfoFromJsonService {
     public static final String TAG = GeoInfoFromJsonService.class.getName();
-    private final Context context;
-    @Getter
-    private ArrayList<GeoInfo> geoInfoList = new ArrayList<>();
+    private final ArrayList<GeoInfo> geoInfoList = new ArrayList<>();
 
     @Inject
     public GeoInfoFromJsonService(@ApplicationContext Context context) {
-        this.context = context;
         //loadGeoInfoFromJson();
     }
 

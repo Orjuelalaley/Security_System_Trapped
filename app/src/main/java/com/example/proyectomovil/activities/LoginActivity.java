@@ -7,6 +7,7 @@ import android.util.Patterns;
 import android.widget.Toast;
 import com.example.proyectomovil.R;
 import com.example.proyectomovil.databinding.ActivityLogInBinding;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
@@ -15,9 +16,10 @@ import java.util.Objects;
 public class LoginActivity extends BasicActivity {
 
     private ActivityLogInBinding binding;
+    FirebaseApp firebaseApp;
     private static final int TIME_INTERVAL = 2000; // Intervalo de tiempo entre pulsaciones en milisegundos
     private long mBackPressed;
-    FirebaseAuth auth = FirebaseAuth.getInstance();
+    FirebaseAuth auth;
     ProgressDialog progressDialog;
 
 
@@ -27,6 +29,7 @@ public class LoginActivity extends BasicActivity {
         setContentView(R.layout.activity_log_in);
         binding = ActivityLogInBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        firebaseApp = FirebaseApp.initializeApp(this);
         progressDialog = new ProgressDialog(this);
         binding.loginButton.setOnClickListener(v -> doLogin());
         binding.signupButton.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
@@ -49,6 +52,7 @@ public class LoginActivity extends BasicActivity {
         String password = binding.loginPassword.getEditText().getText().toString();
         progressDialog.setMessage("Logging in...");
         progressDialog.show();
+        auth = FirebaseAuth.getInstance();
         auth.signInWithEmailAndPassword(email,password).addOnSuccessListener(authResult -> {
             progressDialog.cancel();
             startActivity(new Intent(LoginActivity.this, MainActivity.class));

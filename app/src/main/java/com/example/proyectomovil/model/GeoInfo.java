@@ -1,12 +1,5 @@
 package com.example.proyectomovil.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor(force = true)
 public class GeoInfo {
     private String title;
     private String content;
@@ -32,5 +25,33 @@ public class GeoInfo {
 
     public Double getLng() {
         return lng;
+    }
+
+    public GeoInfo(String title, String content, String imageBase64, Double lat, Double lng) {
+        this.title = title;
+        this.content = content;
+        this.imageBase64 = imageBase64;
+        this.lat = lat;
+        this.lng = lng;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setImageBase64(String imageBase64) {
+        this.imageBase64 = imageBase64;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
     }
 }

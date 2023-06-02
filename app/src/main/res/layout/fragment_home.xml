@@ -1,86 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.HomeFragment">
 
-    <!-- Imagen y texto de bienvenida -->
-
-    <!-- Botón con icono en el centro -->
-
-    <!-- Imagen inferior -->
-
-    <RelativeLayout
-        android:id="@+id/top_layout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="104dp"
-        android:background="@color/green_800">
-
-        <ImageView
-            android:id="@+id/image_view"
-            android:layout_width="83dp"
-            android:layout_height="59dp"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="0dp"
-            android:src="@drawable/usuario3" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/welcome_text"
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/image_view"
-            android:text="@string/bienvenido_a_hogar_seguro"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:layout_marginStart="50dp"
+            android:text="@string/fix_position_label"
+            android:textSize="10pt"
+            android:layout_gravity="start"
+            android:layout_marginTop="15dp" />
 
-        <TextView
-            android:id="@+id/welcome_text2"
+        <Space
+            android:layout_width="120dp"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/isCameraFixedToUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="-257dp"
-            android:layout_toEndOf="@id/welcome_text"
-            android:text="@string/home"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:layout_gravity="start"
+            android:checked="true" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
-    <!--<Button
-        android:id="@+id/button"
-        android:layout_width="309dp"
-        android:layout_height="77dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="127dp"
-        android:background="@drawable/button_background"
-        android:drawableStart="@drawable/campana"
-        android:drawablePadding="8dp"
-        android:text=""
-        app:backgroundTint="#F44336"
-        app:icon="@drawable/campana"
-        app:iconGravity="top"
-        app:iconTint="#FFFFFF" />-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
+        <!-- CardView de Dispositivos -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/dispositivosCardView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="8dp">
 
-    <androidx.fragment.app.FragmentContainerView
+            <!-- Contenido del CardView -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Imagen -->
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/dispositivos" />
+
+                <!-- Título -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dispositivos"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:padding="8dp"
+                    android:textColor="@color/green_800"/>
+                />
+
+                <!-- Descripción -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    android:text="@string/consulta_tus_dispositivos_actuales_y_controla_su_funcionamiento_desde_aqu"
+                    android:padding="8dp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- CardView de Habitación -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/habitacionCardView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="8dp">
+
+            <!-- Contenido del CardView -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Imagen -->
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/habitacion"/>
+                <!-- Título -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/habitaci_n"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:padding="8dp"
+                    android:textColor="@color/green_800"/>
+                />
+
+                <!-- Descripción -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    android:text="@string/accede_a_las_c_maras_de_tu_hogar_para_vigilar_tus_espacios_y_garantizar_la_seguridad"
+                    android:padding="8dp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- CardView de Emergencia -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/emergenciaCardView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="8dp">
+
+            <!-- Contenido del CardView -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Imagen -->
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/emergencias" />
+
+                <!-- Título -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/emergencia"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:padding="8dp"
+                    android:textColor="@color/green_800"/>
+
+                <!-- Descripción -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="11sp"
+                    android:text="@string/en_caso_de_una_emergencia_utiliza_esta_funci_n_para_alertar_a_las_personas_cercanas"
+                    android:padding="8dp" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+    <org.osmdroid.views.MapView
         android:id="@+id/map"
-
-        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:layout_marginHorizontal="10dp"
-
-        android:layout_marginVertical="30dp"
-        android:layout_marginTop="58dp"
-        android:layout_marginBottom="50dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top_layout" />
-
-</RelativeLayout>
+        android:layout_height="fill_parent">
+    </org.osmdroid.views.MapView>
+</LinearLayout>

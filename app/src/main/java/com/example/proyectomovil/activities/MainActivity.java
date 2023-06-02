@@ -7,8 +7,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,29 +18,21 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.view.Window;
+
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.proyectomovil.R;
 import com.example.proyectomovil.databinding.ActivityMainBinding;
-import com.example.proyectomovil.services.LocationService;
 import com.example.proyectomovil.services.PermissionService;
-import com.google.android.gms.location.LocationAvailability;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationResult;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import javax.inject.Inject;
 
@@ -50,23 +40,19 @@ import dagger.hilt.android.AndroidEntryPoint;
 
 
 @AndroidEntryPoint
-public class MainActivity extends BasicActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends BasicActivity implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
 
     private ActivityMainBinding binding;
     FirebaseAuth auth = FirebaseAuth.getInstance();
     private static final int TIME_INTERVAL = 2000; // Intervalo de tiempo entre pulsaciones en milisegundos
     private long mBackPressed;
     SensorManager sensorManager;
-    Sensor sensor;
-    Sensor sensorTemp;
     SensorEventListener sensorEventListener;
 
     @Inject
     PermissionService permissionService;
 
-    @Inject
-    LocationService locationService;
-
+    private Toast currentToast;
 
 
     @Override
@@ -82,108 +68,48 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+    }
 
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
+            float x = event.values[0];
+            if (x<-10){
+                currentToast = Toast.makeText(this, "Llamando a emergencias", Toast.LENGTH_SHORT);
+                currentToast.show();
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:911"));
+                startActivity(intent);
+            }
+        }
+    }
 
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // No es necesario implementar esto en este caso
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        //if (savedInstanceState == null) {
-            locationService.setLocationCallback(new LocationCallback() {
-                @Override
-                public void onLocationAvailability(@NonNull LocationAvailability locationAvailability) {
-                    super.onLocationAvailability(locationAvailability);
-                }
-
-                @Override
-                public void onLocationResult(@NonNull LocationResult locationResult) {
-                    super.onLocationResult(locationResult);
-                }
-            });
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
-            binding.navView.setCheckedItem(R.id.nav_home);
-        }
-
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorTemp = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
-
-        if(sensor == null){
-            finish();
-        }
-
-        if(sensorTemp == null){
-            finish();
-        }
-
-        sensorEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent event) {
-                if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-                    float x = event.values[0]; // Valor del eje x
-
-                    if(x < -5){
-                        Toast.makeText(MainActivity.this, "¡Llamando a la policia!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:123456789"));
-                        if(ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED){
-                            return;
-                        }
-                        startActivity(intent);
-                    }
-                }else if(event.sensor.getType() == Sensor.TYPE_AMBIENT_TEMPERATURE){
-                    float temp = event.values[0];
-                    if(temp > 30){
-                        Toast.makeText(MainActivity.this, "¡Cuidado! La temperatura es muy alta", Toast.LENGTH_SHORT).show();
-                    }else if(temp < 0){
-                        Toast.makeText(MainActivity.this, "¡Cuidado! La temperatura es muy baja", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-            }
-        };
-
-        start();
-
-       // }
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-                    switch (item.getItemId()) {
-                        case R.id.home:
-                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
-                            break;
-                        case R.id.settings:
-                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
-                            break;
-                        case R.id.homeButton:
-                            showBottomDialog();
-                            break;
-                        case R.id.dispositivos:
-                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new DevicesFragment()).commit();
-                            break;
-                        case R.id.about:
-                            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
-                            break;
-                    }
-                    return true;
-                }
-        );
-        permissionService.getLocationPermission(this);
-        if (permissionService.isMLocationPermissionGranted()) {
-            locationService.startLocation();
-        }
-    }
+            if (item.getItemId() == R.id.home) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
+            } else if (item.getItemId() == R.id.settings) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new Setting()).commit();
+            } else if (item.getItemId() == R.id.homeButton) {
+                showBottomDialog();
+            } else if (item.getItemId() == R.id.about) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
+            }
+            return true;
+        });
 
-    private void start(){
-        sensorManager.registerListener(sensorEventListener, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(sensorEventListener, sensorTemp, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    private void stop(){
-        sensorManager.unregisterListener(sensorEventListener);
+        // Cargar el HomeFragment al iniciar la aplicación
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
+        binding.bottomNavigationView.setSelectedItemId(R.id.home);
     }
 
     @Override
@@ -197,15 +123,12 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         mBackPressed = System.currentTimeMillis();
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.nav_home) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
         } else if (item.getItemId() == R.id.nav_settings) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new SettingsFragment()).commit();
-        } else if (item.getItemId() == R.id.nav_share) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new ShareFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new Setting()).commit();
         } else if (item.getItemId() == R.id.nav_help) {
             getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
         } else if (item.getItemId() == R.id.nav_logout) {
@@ -220,8 +143,8 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         Intent intent = new Intent(this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        finishAffinity();
     }
-
 
     private void showBottomDialog() {
 
@@ -254,21 +177,23 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.getWindow().setGravity(Gravity.BOTTOM);
     }
+
     @Override
     protected void onStop() {
         super.onStop();
-        locationService.stopLocation();
+        stop();
+        currentToast.cancel();
     }
-
 
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PermissionService.PERMISSIONS_REQUEST_LOCATION) {
             permissionService.getLocationPermission(this);
-            if (permissionService.isMLocationPermissionGranted()) {
-                locationService.startLocation();
-            }
         }
+    }
+
+    private void stop() {
+        sensorManager.unregisterListener(sensorEventListener);
     }
 }
