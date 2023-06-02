@@ -38,6 +38,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -79,8 +86,26 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         toggle.syncState();
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-        sensorReference = FirebaseDatabase.getInstance().getReference().child("Sensores").child("estado");
-
+        DatabaseReference sensorRef = FirebaseDatabase.getInstance().getReference().child("Sensores").child("estado");
+        listerToSensor(sensorRef);
+    }
+    private void listerToSensor(DatabaseReference sensorRef) {
+        sensorRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    String sensor = Objects.requireNonNull(snapshot.getValue()).toString();
+                    if (sensor.equals("1")){
+                        Toast.makeText(MainActivity.this, "El sensor del hogar a detectado un intruso", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse("tel:911"));
+                        startActivity(intent);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error){}
+        });
     }
 
     @Override
@@ -116,7 +141,6 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HelpFragment()).commit();
             }
             return true;
-
         });
 
         // Cargar el HomeFragment al iniciar la aplicación
