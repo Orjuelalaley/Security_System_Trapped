@@ -137,25 +137,6 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         // Cargar el HomeFragment al iniciar la aplicación
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
         binding.bottomNavigationView.setSelectedItemId(R.id.home);
-
-        //es lo mismo que se realiza en el metodo listerToSensor por ende esta @deprecated
-        /*sensorValueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Integer estado = snapshot.getValue(Integer.class);
-
-                if (estado != null && estado == 1) {
-                    currentToast = Toast.makeText(MainActivity.this, "¡Se detectó movimiento!", Toast.LENGTH_SHORT);
-                    currentToast.show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        };
-        sensorReference.addValueEventListener(sensorValueEventListener);*/
     }
 
     @Override
