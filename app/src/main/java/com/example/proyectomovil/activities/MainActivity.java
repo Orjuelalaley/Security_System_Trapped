@@ -58,10 +58,7 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
 
     @Inject
     PermissionService permissionService;
-
-    private Toast currentToast;
     private DatabaseReference sensorReference;
-    private ValueEventListener sensorValueEventListener;
 
 
 
@@ -108,8 +105,7 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         if (event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
             float x = event.values[0];
             if (x<-10){
-                currentToast = Toast.makeText(this, "Llamando a emergencias", Toast.LENGTH_SHORT);
-                currentToast.show();
+                 Toast.makeText(this, "El sensor del hogar a detectado un intruso", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:911"));
                 startActivity(intent);
@@ -142,7 +138,8 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
         binding.bottomNavigationView.setSelectedItemId(R.id.home);
 
-        sensorValueEventListener = new ValueEventListener() {
+        //es lo mismo que se realiza en el metodo listerToSensor por ende esta @deprecated
+        /*sensorValueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Integer estado = snapshot.getValue(Integer.class);
@@ -158,8 +155,7 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
 
             }
         };
-
-        sensorReference.addValueEventListener(sensorValueEventListener);
+        sensorReference.addValueEventListener(sensorValueEventListener);*/
     }
 
     @Override
@@ -232,7 +228,6 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
     protected void onStop() {
         super.onStop();
         stop();
-        currentToast.cancel();
     }
 
 
