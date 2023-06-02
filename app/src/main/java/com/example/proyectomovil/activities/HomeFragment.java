@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -89,7 +90,6 @@ public class HomeFragment extends Fragment implements SensorEventListener, MapEv
         super.onAttach(context);
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,6 +115,19 @@ public class HomeFragment extends Fragment implements SensorEventListener, MapEv
         IMapController mapController = binding.map.getController();
         // Obtén el proveedor de ubicación actual
         readJson();
+        binding.map.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP && selectedMarker != null) {
+                    GeoPoint endPoint = selectedMarker.getPosition();
+                    double distance = startPoint.distanceToAsDouble(endPoint) / 1000;
+                    Toast.makeText(getContext(), "Distancia al marcador: " + distance + " km", Toast.LENGTH_LONG).show();
+                    return true; // Para indicar que el evento ha sido consumido y no se procese por defecto
+                }
+                return false;
+            }
+        });
+
         LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String provider = locationManager.getBestProvider(criteria, false);

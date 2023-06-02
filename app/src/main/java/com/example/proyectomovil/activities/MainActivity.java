@@ -3,13 +3,11 @@ package com.example.proyectomovil.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.Sensor;
@@ -18,8 +16,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -33,11 +29,17 @@ import com.example.proyectomovil.databinding.ActivityMainBinding;
 import com.example.proyectomovil.services.PermissionService;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-
 
 @AndroidEntryPoint
 public class MainActivity extends BasicActivity implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
@@ -48,11 +50,8 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
     private long mBackPressed;
     SensorManager sensorManager;
     SensorEventListener sensorEventListener;
-
     @Inject
     PermissionService permissionService;
-
-    private Toast currentToast;
 
 
     @Override
@@ -70,6 +69,26 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         toggle.syncState();
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        DatabaseReference sensorRef = FirebaseDatabase.getInstance().getReference().child("Sensores").child("estado");
+        listerToSensor(sensorRef);
+    }
+    private void listerToSensor(DatabaseReference sensorRef) {
+        sensorRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    String sensor = Objects.requireNonNull(snapshot.getValue()).toString();
+                    if (sensor.equals("1")){
+                        Toast.makeText(MainActivity.this, "El sensor del hogar a detectado un intruso", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse("tel:911"));
+                        startActivity(intent);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error){}
+        });
     }
 
     @Override
@@ -77,8 +96,7 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
         if (event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
             float x = event.values[0];
             if (x<-10){
-                currentToast = Toast.makeText(this, "Llamando a emergencias", Toast.LENGTH_SHORT);
-                currentToast.show();
+                Toast.makeText(this, "movimiento rapido detectado, Llamando a la policia", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:911"));
                 startActivity(intent);
@@ -106,7 +124,6 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
             }
             return true;
         });
-
         // Cargar el HomeFragment al iniciar la aplicación
         getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout, new HomeFragment()).commit();
         binding.bottomNavigationView.setSelectedItemId(R.id.home);
@@ -182,7 +199,6 @@ public class MainActivity extends BasicActivity implements NavigationView.OnNavi
     protected void onStop() {
         super.onStop();
         stop();
-        currentToast.cancel();
     }
 
 
